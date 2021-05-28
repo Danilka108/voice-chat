@@ -1,0 +1,35 @@
+.wrapper {
+  width: 100%;
+  height: 100vh;
+  // background-color: var(--primary-lighter-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.steps-wrapper {
+  width: 17rem;
+  height: 15rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.steps-item {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  &.f {
+    background-color: blue;
+  }
+
+  &.s {
+    background-color: green;
+  }
+
+  &.t {
+    background-color: yellow;
+  }
+}
