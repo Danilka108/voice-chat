@@ -13,7 +13,7 @@ services:
       - postgres:/data/postgres
     restart: unless-stopped
     ports:
-      - '5432:5432'
+      - '${DB_PORT}:${DB_PORT}'
   cache:
     container_name: vc_cache
     restart: unless-stopped
