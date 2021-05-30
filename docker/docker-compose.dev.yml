@@ -18,6 +18,8 @@ services:
     container_name: vc_cache
     restart: unless-stopped
     image: 'redis:alpine'
+    ports:
+      - '${CACHE_PORT}:${CACHE_PORT}'
 
 volumes:
   postgres:

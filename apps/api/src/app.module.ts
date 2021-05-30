@@ -4,13 +4,18 @@ import { environment } from './environments/environment'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import databaseConfig from './config/database.config'
 import appConfig from './config/app.config'
+import notificationsConfig from './config/notifications.config'
+import { AuthModule } from './auth/auth.module'
+import { UserModule } from './user/user.module'
+import { User } from './user/user.entity'
+import authConfig from './config/auth.config'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: environment.envFileName,
       isGlobal: true,
-      load: [databaseConfig, appConfig],
+      load: [databaseConfig, appConfig, notificationsConfig, authConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -23,11 +28,13 @@ import appConfig from './config/app.config'
           password: configService.get('database.password'),
           database: configService.get('database.database'),
           synchronize: true,
-          entities: ['dist/**/*.entity.{ts,js}'],
+          entities: [User],
         } as TypeOrmModuleOptions
       },
       inject: [ConfigService],
     }),
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}
