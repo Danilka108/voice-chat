@@ -27,4 +27,8 @@ export class CacheAuthService {
   async get(session: CacheAuthSession): Promise<CacheAuthSessionValue | null> {
     return (await this.cacheManager.get(JSON.stringify(session))) ?? null
   }
+
+  async del(session: CacheAuthSession): Promise<void> {
+    await this.cacheManager.del(JSON.stringify(session))
+  }
 }

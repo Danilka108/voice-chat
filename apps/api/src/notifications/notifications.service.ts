@@ -8,7 +8,7 @@ export class NotificationsService {
     private readonly configService: ConfigService
   ) {}
 
-  async sendAuthNotification(to: string, code: string) {
+  async sendAuthNotification(to: string, code: number) {
     const apiURL = this.configService.get<string>('notifications.apiURL') ?? ''
     const apiID = this.configService.get<string>('notifications.apiID') ?? ''
 

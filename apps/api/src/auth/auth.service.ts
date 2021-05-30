@@ -1,34 +1,57 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotAcceptableException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
 import { CacheAuthService } from '../cache/cache-auth.service'
 import { SessionService } from '../session/session.service'
+import { NotificationsService } from '../notifications/notifications.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly cacheAuthService: CacheAuthService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly notificationsService: NotificationsService
   ) {}
 
   async tel({ tel, browser, os }: AuthTelDto, ip: string) {
     const code = this.sessionService.createAuthCode()
 
-    await this.cacheAuthService.set(
-      {
-        tel,
-        browser,
-        os,
-        ip,
-      },
-      code
-    )
+    const authSession = {
+      tel,
+      browser,
+      os,
+      ip,
+    }
 
-    const apiID = this.configService.get<string>('sms.apiID') ?? ''
-    const apiURL = this.configService.get<string>('sms.apiURL') ?? ''
+    const prevAuthSession = await this.cacheAuthService.get(authSession)
+
+    const codeDisableRefreshPeriod =
+      this.configService.get<number>('auth.codeDisableRefreshPeriod') ?? 0
+
+    if (
+      prevAuthSession !== null &&
+      Date.now() - prevAuthSession.createdAt <= codeDisableRefreshPeriod
+    ) {
+      throw new NotAcceptableException(
+        `The waiting time for sending a message is ${
+          codeDisableRefreshPeriod / 60
+        } minutes. Wait another ${
+          codeDisableRefreshPeriod - (Date.now() - prevAuthSession.createdAt)
+        } seconds.`
+      )
+    }
+
+    await this.cacheAuthService.set(authSession, code)
+
+    try {
+      await this.notificationsService.sendAuthNotification(tel, code)
+    } catch (e: unknown) {
+      await this.cacheAuthService.del(authSession)
+      throw e
+    }
   }
 
   async code({ code, browser, os }: AuthCodeDto, ip: string) {
