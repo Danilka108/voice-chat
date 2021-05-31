@@ -1,22 +1,14 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { environment } from './environments/environment'
+import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import databaseConfig from './config/database.config'
-import appConfig from './config/app.config'
-import notificationsConfig from './config/notifications.config'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
 import { User } from './user/user.entity'
-import authConfig from './config/auth.config'
+import { ConfigModule } from './config/config.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: environment.envFileName,
-      isGlobal: true,
-      load: [databaseConfig, appConfig, notificationsConfig, authConfig],
-    }),
+    ConfigModule.register(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {

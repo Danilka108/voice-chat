@@ -1,4 +1,8 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
@@ -6,6 +10,7 @@ import { AuthTelDto } from './dto/auth-tel.dto'
 import { CacheAuthService } from '../cache/cache-auth.service'
 import { SessionService } from '../session/session.service'
 import { NotificationsService } from '../notifications/notifications.service'
+import { CacheAuthSession } from '../cache/interfaces/auth-session.interface'
 
 @Injectable()
 export class AuthService {
@@ -54,7 +59,21 @@ export class AuthService {
     }
   }
 
-  async code({ code, browser, os }: AuthCodeDto, ip: string) {
+  async code({ tel, code, browser, os }: AuthCodeDto, ip: string) {
+    const authSession: CacheAuthSession = {
+      browser,
+      os,
+      ip,
+      tel,
+    }
+
+    const data = await this.cacheAuthService.get(authSession)
+
+    if (data === null) throw new ForbiddenException('Auth error. Invalid code.')
+
+    if (data.code !== code)
+      throw new ForbiddenException('Auth error. Invalid code.')
+
     return {
       userID: 0,
       accessToken: '',

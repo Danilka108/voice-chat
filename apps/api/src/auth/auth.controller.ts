@@ -12,6 +12,7 @@ import {
   AuthRefreshTokenRes,
 } from '@voice-chat/api-interfaces'
 import { AuthService } from './auth.service'
+import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
 
@@ -33,7 +34,7 @@ export class AuthController {
 
   @Post('code')
   async code(
-    @Body() authCodeDto: AuthCodeReq,
+    @Body() authCodeDto: AuthCodeDto,
     @Ip() ip: string
   ): Promise<AuthCodeRes> {
     const result = await this.authService.code(authCodeDto, ip)
