@@ -6,11 +6,7 @@ import {
   Ip,
   Post,
 } from '@nestjs/common'
-import {
-  AuthCodeReq,
-  AuthCodeRes,
-  AuthRefreshTokenRes,
-} from '@voice-chat/api-interfaces'
+import { AuthCodeRes, AuthRefreshTokenRes } from '@voice-chat/api-interfaces'
 import { AuthService } from './auth.service'
 import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'

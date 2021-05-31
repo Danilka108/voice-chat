@@ -6,7 +6,7 @@ export class User {
   id!: number
 
   @Column()
-  phone_number!: string
+  tel!: string
 
   @Column()
   name!: string

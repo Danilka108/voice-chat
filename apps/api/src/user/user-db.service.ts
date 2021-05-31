@@ -19,20 +19,20 @@ export class UserDBService {
     return user ? user : null
   }
 
-  async findByPhoneNumber(phoneNumber: string): Promise<User | null> {
+  async findByTel(tel: string): Promise<User | null> {
     const user = await this.userRepo.findOne({
       where: {
-        phone_number: phoneNumber,
+        tel: tel,
       },
     })
 
     return user ? user : null
   }
 
-  async create(name: string, phoneNumber: string): Promise<User> {
+  async create(name: string, tel: string): Promise<User> {
     const newUser = new User()
     newUser.name = name
-    newUser.phone_number = phoneNumber
+    newUser.tel = tel
     const createdUser = this.userRepo.create(newUser)
 
     return createdUser

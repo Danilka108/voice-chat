@@ -14,7 +14,7 @@ export interface AuthCodeReq {
 }
 
 export interface AuthRefreshTokenReq {
-  userID: number
+  accessToken: string
   refreshToken: string
   browser: string
   os: string
@@ -24,14 +24,12 @@ export interface AuthTelRes extends BaseRes {}
 
 export interface AuthCodeRes
   extends BaseRes<{
-    userID: number
     accessToken: string
     refreshToken: string
   }> {}
 
 export interface AuthRefreshTokenRes
   extends BaseRes<{
-    userID: number
     accessToken: string
     refreshToken: string
   }> {}

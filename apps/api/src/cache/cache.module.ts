@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as redisStore from 'cache-manager-redis-store'
-import { CacheAuthService } from './cache-auth.service'
+import { CacheAuthCodeService } from './shared/cache-auth-code.service'
+import { CacheAuthSessionService } from './shared/cache-auth-session.service'
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { CacheAuthService } from './cache-auth.service'
       inject: [ConfigService],
     }),
   ],
-  providers: [CacheAuthService],
-  exports: [CacheAuthService],
+  providers: [CacheAuthCodeService, CacheAuthSessionService],
+  exports: [CacheAuthCodeService, CacheAuthSessionService],
 })
 export class CacheModule {}

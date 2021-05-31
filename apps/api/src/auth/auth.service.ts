@@ -7,88 +7,154 @@ import { ConfigService } from '@nestjs/config'
 import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
-import { CacheAuthService } from '../cache/cache-auth.service'
+import { CacheAuthCodeService } from '../cache/shared/cache-auth-code.service'
 import { SessionService } from '../session/session.service'
 import { NotificationsService } from '../notifications/notifications.service'
+import { CacheAuthCode } from '../cache/interfaces/auth-code.interface'
+import { UserDBService } from '../user/user-db.service'
+import { CacheAuthSessionService } from '../cache/shared/cache-auth-session.service'
 import { CacheAuthSession } from '../cache/interfaces/auth-session.interface'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly cacheAuthService: CacheAuthService,
+    private readonly cacheAuthCodeService: CacheAuthCodeService,
     private readonly sessionService: SessionService,
-    private readonly notificationsService: NotificationsService
+    private readonly notificationsService: NotificationsService,
+    private readonly userDBService: UserDBService,
+    private readonly cacheAuthSessionService: CacheAuthSessionService
   ) {}
 
-  async tel({ tel, browser, os }: AuthTelDto, ip: string) {
+  async tel({ tel, browser, os }: AuthTelDto, ip: string): Promise<void> {
     const code = this.sessionService.createAuthCode()
 
-    const authSession = {
+    const cacheData = {
       tel,
       browser,
       os,
       ip,
     }
 
-    const prevAuthSession = await this.cacheAuthService.get(authSession)
+    const prevCacheData = await this.cacheAuthCodeService.get(cacheData)
 
     const codeDisableRefreshPeriod =
-      this.configService.get<number>('auth.codeDisableRefreshPeriod') ?? 0
+      this.configService.get<number>('auth.code.disableRefreshPeriod') ?? 0
 
     if (
-      prevAuthSession !== null &&
-      Date.now() - prevAuthSession.createdAt <= codeDisableRefreshPeriod
+      prevCacheData !== null &&
+      Date.now() - prevCacheData.createdAt <= codeDisableRefreshPeriod
     ) {
       throw new NotAcceptableException(
         `The waiting time for sending a message is ${
           codeDisableRefreshPeriod / 60
         } minutes. Wait another ${
-          codeDisableRefreshPeriod - (Date.now() - prevAuthSession.createdAt)
+          codeDisableRefreshPeriod - (Date.now() - prevCacheData.createdAt)
         } seconds.`
       )
     }
 
-    await this.cacheAuthService.set(authSession, code)
+    await this.cacheAuthCodeService.set(cacheData, code)
 
     try {
       await this.notificationsService.sendAuthNotification(tel, code)
     } catch (e: unknown) {
-      await this.cacheAuthService.del(authSession)
+      await this.cacheAuthCodeService.del(cacheData)
       throw e
     }
   }
 
-  async code({ tel, code, browser, os }: AuthCodeDto, ip: string) {
-    const authSession: CacheAuthSession = {
+  async code(
+    { tel, code, browser, os }: AuthCodeDto,
+    ip: string
+  ): Promise<{
+    accessToken: string
+    refreshToken: string
+  }> {
+    const cacheData: CacheAuthCode = {
       browser,
       os,
       ip,
       tel,
     }
 
-    const data = await this.cacheAuthService.get(authSession)
+    const cachedData = await this.cacheAuthCodeService.get(cacheData)
 
-    if (data === null) throw new ForbiddenException('Auth error. Invalid code.')
+    if (cachedData === null || cachedData.code !== code)
+      throw new ForbiddenException('Auth error. Failed verify code.')
 
-    if (data.code !== code)
-      throw new ForbiddenException('Auth error. Invalid code.')
+    let user = await this.userDBService.findByTel(tel)
+
+    if (user === null) {
+      user = await this.userDBService.create('', tel)
+    }
+
+    const cacheCode: CacheAuthCode = {
+      tel,
+      ip,
+      os,
+      browser,
+    }
+
+    await this.cacheAuthCodeService.del(cacheCode)
+
+    const accessToken = this.sessionService.createAccessToken(user.id, user.tel)
+    const refreshToken = this.sessionService.createRefreshToken()
+
+    const cacheSession: CacheAuthSession = {
+      id: user.id,
+      os,
+      browser,
+      ip,
+    }
+
+    await this.cacheAuthSessionService.set(cacheSession, refreshToken)
 
     return {
-      userID: 0,
-      accessToken: '',
-      refreshToken: '',
+      accessToken,
+      refreshToken,
     }
   }
 
   async refreshToken(
-    { refreshToken, userID, browser, os }: AuthRefreshTokenDto,
+    { refreshToken, accessToken, browser, os }: AuthRefreshTokenDto,
     ip: string
   ) {
+    const decoded = this.sessionService.decodeAccessToken(accessToken)
+
+    if (decoded === null) {
+      throw new ForbiddenException('Auth error. Failed verify token.')
+    }
+
+    const cacheSession: CacheAuthSession = {
+      id: decoded.userID,
+      os,
+      browser,
+      ip,
+    }
+
+    const cacheSessionValue = await this.cacheAuthSessionService.get(
+      cacheSession
+    )
+
+    if (
+      cacheSessionValue === null ||
+      cacheSessionValue.refreshToken !== refreshToken
+    ) {
+      throw new ForbiddenException('Auth error. Failed verify token.')
+    }
+
+    const newAccessToken = this.sessionService.createAccessToken(
+      decoded.userID,
+      decoded.tel
+    )
+    const newRefreshToken = this.sessionService.createRefreshToken()
+
+    await this.cacheAuthSessionService.set(cacheSession, newRefreshToken)
+
     return {
-      userID: 0,
-      accessToken: '',
-      refreshToken: '',
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
     }
   }
 }

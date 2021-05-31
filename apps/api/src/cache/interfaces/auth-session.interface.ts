@@ -1,11 +1,10 @@
 export interface CacheAuthSession {
-  tel: string
-  browser: string
+  id: number
   os: string
+  browser: string
   ip: string
 }
 
 export interface CacheAuthSessionValue {
-  code: number
-  createdAt: number
+  refreshToken: string
 }
