@@ -19,7 +19,7 @@ export class CacheAuthSessionService {
       refreshToken,
     }
 
-    const sessionTTL = this.configService.get<number>('auth.session.ttl') ?? 0
+    const sessionTTL = this.configService.get<number>('auth.session.ttl') || 0
 
     await this.cacheManager.set(
       JSON.stringify(data),

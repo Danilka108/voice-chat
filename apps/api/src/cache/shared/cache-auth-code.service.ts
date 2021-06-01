@@ -14,13 +14,13 @@ export class CacheAuthCodeService {
     private readonly configService: ConfigService
   ) {}
 
-  async set(data: CacheAuthCode, code: number) {
+  async set(data: CacheAuthCode, code: number): Promise<void> {
     const value: CacheAuthCodeValue = {
       code,
       createdAt: Date.now(),
     }
 
-    const codeTTL = this.configService.get<number>('auth.code.ttl') ?? 0
+    const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
 
     await this.cacheManager.set(
       JSON.stringify(data),
@@ -29,7 +29,7 @@ export class CacheAuthCodeService {
     )
   }
 
-  async get(data: CacheAuthCode) {
+  async get(data: CacheAuthCode): Promise<CacheAuthCodeValue | null> {
     const cachedDataValue = await this.cacheManager.get(JSON.stringify(data))
 
     if (typeof cachedDataValue !== 'string') return null

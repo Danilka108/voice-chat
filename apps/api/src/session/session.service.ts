@@ -10,7 +10,7 @@ export class SessionService {
   constructor(private readonly configService: ConfigService) {}
 
   createAuthCode(): number {
-    const codeMax = this.configService.get<number>('auth.code.max') ?? 0
+    const codeMax = this.configService.get<number>('auth.code.max') || 0
     const code = crypto.randomInt(codeMax)
 
     return code
@@ -18,9 +18,9 @@ export class SessionService {
 
   createAccessToken(userID: number, tel: string): string {
     const expiresIn =
-      this.configService.get<number>('token.accessToken.expiresIn') ?? 0
+      this.configService.get<number>('token.accessToken.expiresIn') || 0
     const secret =
-      this.configService.get<string>('token.accessToken.secret') ?? ''
+      this.configService.get<string>('token.accessToken.secret') || ''
 
     const token = jwt.sign({ userID, tel }, secret, {
       expiresIn,
@@ -49,7 +49,7 @@ export class SessionService {
 
   async verifyAccessToken(accessToken: string): Promise<AuthDecoded | null> {
     const secret =
-      this.configService.get<string>('token.accessToken.secret') ?? ''
+      this.configService.get<string>('token.accessToken.secret') || ''
 
     const decoded = new Promise<AuthDecoded | null>((resolve) => {
       jwt.verify(accessToken, secret, {}, (error, data) => {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotAcceptableException,
@@ -39,7 +40,7 @@ export class AuthService {
     const prevCacheData = await this.cacheAuthCodeService.get(cacheData)
 
     const codeDisableRefreshPeriod =
-      this.configService.get<number>('auth.code.disableRefreshPeriod') ?? 0
+      this.configService.get<number>('auth.code.disableRefreshPeriod') || 0
 
     if (
       prevCacheData !== null &&
@@ -56,11 +57,14 @@ export class AuthService {
 
     await this.cacheAuthCodeService.set(cacheData, code)
 
-    try {
-      await this.notificationsService.sendAuthNotification(tel, code)
-    } catch (e: unknown) {
+    const isSendedMessage = await this.notificationsService.sendAuthNotification(
+      tel,
+      code
+    )
+
+    if (!isSendedMessage) {
       await this.cacheAuthCodeService.del(cacheData)
-      throw e
+      throw new BadRequestException('Failed to send authentication message')
     }
   }
 
