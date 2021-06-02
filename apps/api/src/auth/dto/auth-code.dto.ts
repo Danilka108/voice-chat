@@ -2,7 +2,7 @@ import { AuthCodeReq } from '@voice-chat/api-interfaces'
 import { IsInt, IsString } from 'class-validator'
 
 export class AuthCodeDto implements AuthCodeReq {
-  @IsInt()
+  @IsString()
   tel!: string
 
   @IsInt()

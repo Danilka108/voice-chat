@@ -1,4 +1,4 @@
-import { BadRequestException, HttpService, Injectable } from '@nestjs/common'
+import { HttpService, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { of } from 'rxjs'
 import { catchError, map } from 'rxjs/operators'
@@ -14,7 +14,7 @@ export class NotificationsService {
     const apiURL = this.configService.get<string>('notifications.apiURL') || ''
     const apiID = this.configService.get<string>('notifications.apiID') || ''
 
-    return await this.httpService
+    const result = await this.httpService
       .get(apiURL, {
         params: {
           api_id: apiID,
@@ -24,9 +24,11 @@ export class NotificationsService {
         },
       })
       .pipe(
-        map(() => true),
+        map((v) => v.status === 200),
         catchError(() => of(false))
       )
       .toPromise()
+
+    return result
   }
 }

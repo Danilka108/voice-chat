@@ -1,6 +1,6 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Cache } from 'cache-manager'
+import { CacheManager, CACHE_MANAGER } from '../cache-manager'
 import {
   CacheAuthCode,
   CacheAuthCodeValue,
@@ -10,11 +10,18 @@ import { isCacheAuthCodeValue } from '../validators/is-cache-auth-code-value'
 @Injectable()
 export class CacheAuthCodeService {
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheManager,
     private readonly configService: ConfigService
   ) {}
 
   async set(data: CacheAuthCode, code: number): Promise<void> {
+    const key: CacheAuthCode = {
+      tel: data.tel,
+      browser: data.browser,
+      os: data.os,
+      ip: data.ip,
+    }
+
     const value: CacheAuthCodeValue = {
       code,
       createdAt: Date.now(),
@@ -23,14 +30,22 @@ export class CacheAuthCodeService {
     const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
 
     await this.cacheManager.set(
-      JSON.stringify(data),
+      JSON.stringify(key),
       JSON.stringify(value),
+      'EX',
       codeTTL
     )
   }
 
   async get(data: CacheAuthCode): Promise<CacheAuthCodeValue | null> {
-    const cachedDataValue = await this.cacheManager.get(JSON.stringify(data))
+    const key: CacheAuthCode = {
+      tel: data.tel,
+      browser: data.browser,
+      os: data.os,
+      ip: data.ip,
+    }
+
+    const cachedDataValue = await this.cacheManager.get(JSON.stringify(key))
 
     if (typeof cachedDataValue !== 'string') return null
 
@@ -42,6 +57,13 @@ export class CacheAuthCodeService {
   }
 
   async del(data: CacheAuthCode): Promise<void> {
-    await this.cacheManager.del(JSON.stringify(data))
+    const key: CacheAuthCode = {
+      tel: data.tel,
+      browser: data.browser,
+      os: data.os,
+      ip: data.ip,
+    }
+
+    await this.cacheManager.del(JSON.stringify(key))
   }
 }

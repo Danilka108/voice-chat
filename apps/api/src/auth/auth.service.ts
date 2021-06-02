@@ -76,22 +76,16 @@ export class AuthService {
     refreshToken: string
   }> {
     const cacheData: CacheAuthCode = {
+      tel,
       browser,
       os,
       ip,
-      tel,
     }
 
     const cachedData = await this.cacheAuthCodeService.get(cacheData)
 
     if (cachedData === null || cachedData.code !== code)
       throw new ForbiddenException('Auth error. Failed verify code.')
-
-    let user = await this.userDBService.findByTel(tel)
-
-    if (user === null) {
-      user = await this.userDBService.create('', tel)
-    }
 
     const cacheCode: CacheAuthCode = {
       tel,
@@ -101,6 +95,12 @@ export class AuthService {
     }
 
     await this.cacheAuthCodeService.del(cacheCode)
+
+    let user = await this.userDBService.findByTel(tel)
+
+    if (user === null) {
+      user = await this.userDBService.create('', tel)
+    }
 
     const accessToken = this.sessionService.createAccessToken(user.id, user.tel)
     const refreshToken = this.sessionService.createRefreshToken()
