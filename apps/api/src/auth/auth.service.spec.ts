@@ -14,7 +14,6 @@ import { CacheAuthSessionService } from '../cache/shared/cache-auth-session.serv
 import { CacheAuthCode } from '../cache/interfaces/auth-code.interface'
 
 jest.mock('../cache/shared/cache-auth-code.service')
-jest.mock('@nestjs/config')
 jest.mock('../session/session.service')
 jest.mock('../notifications/notifications.service')
 jest.mock('../user/user-db.service')
@@ -34,7 +33,12 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         CacheAuthCodeService,
-        ConfigService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
         SessionService,
         NotificationsService,
         UserDBService,

@@ -5,9 +5,6 @@ import { CacheManager, CACHE_MANAGER } from '../cache-manager'
 import { CacheAuthSession, CacheAuthSessionValue } from '../interfaces/auth-session.interface'
 import { CacheAuthSessionService } from './cache-auth-session.service'
 
-jest.mock('ioredis')
-jest.mock('@nestjs/config')
-
 describe('CacheAuthSessionService', () => {
   let cacheManager: CacheManager
   let cacheAuthSessionService: CacheAuthSessionService
@@ -16,12 +13,21 @@ describe('CacheAuthSessionService', () => {
   beforeEach(async () => {
     const testingModule = await Test.createTestingModule({
       providers: [
-        CacheAuthSessionService,
         {
           provide: CACHE_MANAGER,
-          useClass: IORedis,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
+          },
         },
-        ConfigService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
+        CacheAuthSessionService,
       ],
     }).compile()
 

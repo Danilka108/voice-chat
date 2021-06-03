@@ -38,7 +38,7 @@ export class CacheAuthSessionService {
 
     const cachedDataValue = await this.cacheManager.get(JSON.stringify(key))
 
-    if (typeof cachedDataValue !== 'string') return null
+    if (cachedDataValue === null) return null
 
     const dataValue = JSON.parse(cachedDataValue)
 

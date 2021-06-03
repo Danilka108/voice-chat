@@ -48,7 +48,7 @@ export class SessionService {
   async verifyAccessToken(accessToken: string): Promise<AuthDecoded | null> {
     const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
-    const decoded = new Promise<AuthDecoded | null>((resolve) => {
+    const decoded = await new Promise<AuthDecoded | null>((resolve) => {
       jwt.verify(accessToken, secret, {}, (error, data) => {
         if (error || !isAuthDecoded(data)) {
           resolve(null)
@@ -59,6 +59,6 @@ export class SessionService {
       })
     })
 
-    return await decoded
+    return decoded
   }
 }

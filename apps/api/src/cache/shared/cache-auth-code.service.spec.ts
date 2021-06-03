@@ -5,9 +5,6 @@ import { ConfigService } from '@nestjs/config'
 import { CacheAuthCodeService } from './cache-auth-code.service'
 import { CacheAuthCode, CacheAuthCodeValue } from '../interfaces/auth-code.interface'
 
-jest.mock('@nestjs/config')
-jest.mock('ioredis')
-
 describe('CacheAuthCodeService', () => {
   let cacheManager: CacheManager
   let configService: ConfigService
@@ -18,9 +15,18 @@ describe('CacheAuthCodeService', () => {
       providers: [
         {
           provide: CACHE_MANAGER,
-          useClass: IORedis,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
+          },
         },
-        ConfigService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
         CacheAuthCodeService,
       ],
     }).compile()
