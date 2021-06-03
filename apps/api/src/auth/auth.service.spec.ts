@@ -73,10 +73,7 @@ describe('AuthService', () => {
     })
 
     describe("it's possible to send the notification", () => {
-      let setCodeSpy: jest.SpyInstance<
-        Promise<void>,
-        [data: CacheAuthCode, code: number]
-      >
+      let setCodeSpy: jest.SpyInstance<Promise<void>, [data: CacheAuthCode, code: number]>
 
       beforeEach(() => {
         jest.spyOn(configService, 'get').mockReturnValue(-999999)
@@ -132,9 +129,7 @@ describe('AuthService', () => {
 
     describe('auth code', () => {
       it('should throw an error if the auth code is not in the cache', async () => {
-        jest
-          .spyOn(cacheAuthCodeService, 'get')
-          .mockReturnValue(Promise.resolve(null))
+        jest.spyOn(cacheAuthCodeService, 'get').mockReturnValue(Promise.resolve(null))
 
         await expect(
           authService.code(
@@ -211,9 +206,7 @@ describe('AuthService', () => {
           })
         )
 
-        jest
-          .spyOn(userDBService, 'findByTel')
-          .mockReturnValue(Promise.resolve(null))
+        jest.spyOn(userDBService, 'findByTel').mockReturnValue(Promise.resolve(null))
 
         jest.spyOn(userDBService, 'create').mockReturnValue(
           Promise.resolve({
@@ -294,9 +287,7 @@ describe('AuthService', () => {
           tel: '',
         })
 
-        jest
-          .spyOn(cacheAuthSessionService, 'get')
-          .mockReturnValue(Promise.resolve(null))
+        jest.spyOn(cacheAuthSessionService, 'get').mockReturnValue(Promise.resolve(null))
 
         await expect(
           authService.refreshToken(

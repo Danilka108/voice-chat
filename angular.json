@@ -47,10 +47,7 @@
             "polyfills": "apps/voice-chat/src/polyfills.ts",
             "tsConfig": "apps/voice-chat/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "apps/voice-chat/src/favicon.ico",
-              "apps/voice-chat/src/assets"
-            ],
+            "assets": ["apps/voice-chat/src/favicon.ico", "apps/voice-chat/src/assets"],
             "styles": ["apps/voice-chat/src/styles.scss"],
             "scripts": []
           },

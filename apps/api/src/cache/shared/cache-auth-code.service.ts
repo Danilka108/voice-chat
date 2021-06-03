@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { CacheManager, CACHE_MANAGER } from '../cache-manager'
-import {
-  CacheAuthCode,
-  CacheAuthCodeValue,
-} from '../interfaces/auth-code.interface'
+import { CacheAuthCode, CacheAuthCodeValue } from '../interfaces/auth-code.interface'
 import { isCacheAuthCodeValue } from '../validators/is-cache-auth-code-value'
 
 @Injectable()
@@ -29,12 +26,7 @@ export class CacheAuthCodeService {
 
     const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
 
-    await this.cacheManager.set(
-      JSON.stringify(key),
-      JSON.stringify(value),
-      'EX',
-      codeTTL
-    )
+    await this.cacheManager.set(JSON.stringify(key), JSON.stringify(value), 'EX', codeTTL)
   }
 
   async get(data: CacheAuthCode): Promise<CacheAuthCodeValue | null> {

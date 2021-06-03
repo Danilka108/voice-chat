@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import {
-  CacheAuthSession,
-  CacheAuthSessionValue,
-} from '../interfaces/auth-session.interface'
+import { CacheAuthSession, CacheAuthSessionValue } from '../interfaces/auth-session.interface'
 import { CacheManager, CACHE_MANAGER } from '../cache-manager'
 import { isCacheAuthSessionValue } from '../validators/is-cache-auth-session-value'
 
@@ -28,12 +25,7 @@ export class CacheAuthSessionService {
 
     const sessionTTL = this.configService.get<number>('auth.session.ttl') || 0
 
-    await this.cacheManager.set(
-      JSON.stringify(key),
-      JSON.stringify(value),
-      'EX',
-      sessionTTL
-    )
+    await this.cacheManager.set(JSON.stringify(key), JSON.stringify(value), 'EX', sessionTTL)
   }
 
   async get(data: CacheAuthSession) {

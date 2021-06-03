@@ -57,10 +57,7 @@ export class AuthService {
 
     await this.cacheAuthCodeService.set(cacheData, code)
 
-    const isSendedMessage = await this.notificationsService.sendAuthNotification(
-      tel,
-      code
-    )
+    const isSendedMessage = await this.notificationsService.sendAuthNotification(tel, code)
 
     if (!isSendedMessage) {
       await this.cacheAuthCodeService.del(cacheData)
@@ -137,21 +134,13 @@ export class AuthService {
       ip,
     }
 
-    const cacheSessionValue = await this.cacheAuthSessionService.get(
-      cacheSession
-    )
+    const cacheSessionValue = await this.cacheAuthSessionService.get(cacheSession)
 
-    if (
-      cacheSessionValue === null ||
-      cacheSessionValue.refreshToken !== refreshToken
-    ) {
+    if (cacheSessionValue === null || cacheSessionValue.refreshToken !== refreshToken) {
       throw new ForbiddenException('Auth error. Failed verify token.')
     }
 
-    const newAccessToken = this.sessionService.createAccessToken(
-      decoded.userID,
-      decoded.tel
-    )
+    const newAccessToken = this.sessionService.createAccessToken(decoded.userID, decoded.tel)
     const newRefreshToken = this.sessionService.createRefreshToken()
 
     await this.cacheAuthSessionService.set(cacheSession, newRefreshToken)

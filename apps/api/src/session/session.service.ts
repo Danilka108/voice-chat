@@ -17,10 +17,8 @@ export class SessionService {
   }
 
   createAccessToken(userID: number, tel: string): string {
-    const expiresIn =
-      this.configService.get<number>('token.accessToken.expiresIn') || 0
-    const secret =
-      this.configService.get<string>('token.accessToken.secret') || ''
+    const expiresIn = this.configService.get<number>('token.accessToken.expiresIn') || 0
+    const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
     const token = jwt.sign({ userID, tel }, secret, {
       expiresIn,
@@ -48,8 +46,7 @@ export class SessionService {
   }
 
   async verifyAccessToken(accessToken: string): Promise<AuthDecoded | null> {
-    const secret =
-      this.configService.get<string>('token.accessToken.secret') || ''
+    const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
     const decoded = new Promise<AuthDecoded | null>((resolve) => {
       jwt.verify(accessToken, secret, {}, (error, data) => {

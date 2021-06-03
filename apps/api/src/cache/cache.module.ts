@@ -5,11 +5,7 @@ import { CacheAuthSessionService } from './shared/cache-auth-session.service'
 
 @Module({
   imports: [],
-  providers: [
-    CacheAuthCodeService,
-    CacheAuthSessionService,
-    cacheManagerProvider(),
-  ],
+  providers: [CacheAuthCodeService, CacheAuthSessionService, cacheManagerProvider()],
   exports: [CacheAuthCodeService, CacheAuthSessionService],
 })
 export class CacheModule {}

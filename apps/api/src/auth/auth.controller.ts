@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Ip,
-  Post,
-} from '@nestjs/common'
+import { Body, Controller, HttpCode, HttpStatus, Ip, Post } from '@nestjs/common'
 import { AuthCodeRes, AuthRefreshTokenRes } from '@voice-chat/api-interfaces'
 import { AuthService } from './auth.service'
 import { AuthCodeDto } from './dto/auth-code.dto'
@@ -23,16 +16,12 @@ export class AuthController {
 
     return {
       statusCode: 200,
-      message:
-        'A code will be sent to the entered phone number. Use this code for sign in.',
+      message: 'A code will be sent to the entered phone number. Use this code for sign in.',
     }
   }
 
   @Post('code')
-  async code(
-    @Body() authCodeDto: AuthCodeDto,
-    @Ip() ip: string
-  ): Promise<AuthCodeRes> {
+  async code(@Body() authCodeDto: AuthCodeDto, @Ip() ip: string): Promise<AuthCodeRes> {
     const result = await this.authService.code(authCodeDto, ip)
 
     return {
