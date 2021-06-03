@@ -39,7 +39,7 @@ export class CacheAuthCodeService {
 
     const cachedDataValue = await this.cacheManager.get(JSON.stringify(key))
 
-    if (typeof cachedDataValue !== 'string') return null
+    if (cachedDataValue === null) return null
 
     const valueData = JSON.parse(cachedDataValue)
 

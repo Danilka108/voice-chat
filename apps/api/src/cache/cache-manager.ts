@@ -2,10 +2,9 @@ import { Provider } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as IORedis from 'ioredis'
 import { Logger } from '@nestjs/common'
-import { Redis } from 'ioredis'
 
 export const CACHE_MANAGER = 'CACHE_CORE_MANAGER'
-export type CacheManager = Redis
+export type CacheManager = IORedis.Redis
 
 export const cacheManagerProvider = (): Provider => ({
   inject: [ConfigService],
