@@ -34,7 +34,7 @@ export class SessionService {
       return null
     }
 
-    return decoded
+    return decoded as AuthDecoded
   }
 
   createRefreshToken(): string {
