@@ -49,7 +49,7 @@ export class AuthService {
       throw new NotAcceptableException(
         `The waiting time for sending a message is ${
           codeDisableRefreshPeriod / 60
-        } minutes. Wait another ${
+        } minutes. Wait ${
           codeDisableRefreshPeriod - Math.round((Date.now() - prevCacheData.createdAt) / 1000)
         } seconds.`
       )

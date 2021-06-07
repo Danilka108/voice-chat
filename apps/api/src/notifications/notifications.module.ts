@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as twilio from 'twilio'
+import { NotificationsDevService } from './notifications-dev.service'
 import { NotificationsService } from './notifications.service'
 
 @Module({
   providers: [
-    NotificationsService,
+    {
+      provide: NotificationsService,
+      useClass: NotificationsDevService,
+    },
     {
       provide: 'twilio',
       useFactory: (configService: ConfigService) => {

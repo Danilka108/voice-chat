@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Twilio } from 'twilio'
+import { INotificationsService } from './notifications.interface'
 
-@Injectable()
-export class NotificationsService {
+export class NotificationsService implements INotificationsService {
   constructor(
     private readonly configService: ConfigService,
     @Inject('twilio') private readonly twilio: Twilio
