@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config'
 
 export const notificationsConfig = registerAs('notifications', () => ({
-  apiID: process.env.SMS_API_ID,
-  apiURL: process.env.SMS_API_URL,
+  apiSID: process.env.NOTIFICATIONS_API_SID,
+  apiToken: process.env.NOTIFICATIONS_API_TOKEN,
+  apiFrom: process.env.NOTIFICATIONS_API_FROM,
 }))

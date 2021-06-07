@@ -1,34 +1,24 @@
-import { HttpService, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { of } from 'rxjs'
-import { catchError, map } from 'rxjs/operators'
+import { Twilio } from 'twilio'
 
 @Injectable()
 export class NotificationsService {
   constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    @Inject('twilio') private readonly twilio: Twilio
   ) {}
 
   async sendAuthNotification(to: string, code: number): Promise<boolean> {
-    const apiURL = this.configService.get<string>('notifications.apiURL') || ''
-    const apiID = this.configService.get<string>('notifications.apiID') || ''
+    const from = this.configService.get<string>('notifications.apiFrom') || ''
+    const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
 
-    const result = await this.httpService
-      .get(apiURL, {
-        params: {
-          api_id: apiID,
-          json: 1,
-          to: to.slice(1, to.length),
-          msg: `Your security code is: ${code}`,
-        },
-      })
-      .pipe(
-        map((v) => v.status === 200),
-        catchError(() => of(false))
-      )
-      .toPromise()
+    const message = await this.twilio.messages.create({
+      body: `Your security code: ${code}. Code lifetime is ${codeTTL / 60} minutes`,
+      from,
+      to,
+    })
 
-    return result
+    return message.errorCode === null
   }
 }

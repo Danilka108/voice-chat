@@ -44,13 +44,13 @@ export class AuthService {
 
     if (
       prevCacheData !== null &&
-      Date.now() - prevCacheData.createdAt <= codeDisableRefreshPeriod
+      (Date.now() - prevCacheData.createdAt) / 1000 <= codeDisableRefreshPeriod
     ) {
       throw new NotAcceptableException(
         `The waiting time for sending a message is ${
           codeDisableRefreshPeriod / 60
         } minutes. Wait another ${
-          codeDisableRefreshPeriod - (Date.now() - prevCacheData.createdAt)
+          codeDisableRefreshPeriod - Math.round((Date.now() - prevCacheData.createdAt) / 1000)
         } seconds.`
       )
     }

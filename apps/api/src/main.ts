@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix)
   app.useGlobalPipes(new ValidationPipe())
   const config = app.get(ConfigService)
-  const port = config.get('API_PORT')
+  const port = config.get('app.port')
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix)
   })
