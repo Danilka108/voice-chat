@@ -241,6 +241,13 @@ body {
   --disabled-text-color: #{$dark-disabled-text};
   --dividers-color: #{$dark-dividers};
   --focused-color: #{$dark-focused};
+
+  --reverse-text-color: #{$light-text};
+  --reverse-primary-text-color: #{$light-primary-text};
+  --reverse-accent-text-color: #{$light-accent-text};
+  --reverse-disabled-text-color: #{$light-disabled-text};
+  --reverse-dividers-color: #{$light-dividers};
+  --reverse-focused-color: #{$light-focused};
 }
 
 // Theme Init
@@ -255,6 +262,13 @@ body {
   --disabled-text-color: #{$light-disabled-text};
   --dividers-color: #{$light-dividers};
   --focused-color: #{$light-focused};
+
+  --reverse-text-color: #{$dark-text};
+  --reverse-primary-text-color: #{$dark-primary-text};
+  --reverse-accent-text-color: #{$dark-accent-text};
+  --reverse-disabled-text-color: #{$dark-disabled-text};
+  --reverse-dividers-color: #{$dark-dividers};
+  --reverse-focused-color: #{$dark-focused};
 }
 
 // Specific component overrides, pieces that are not in line with the general theming

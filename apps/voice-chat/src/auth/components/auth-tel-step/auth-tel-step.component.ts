@@ -15,7 +15,7 @@ export class AuthTelStepComponent extends BaseComponent {
 
   form!: FormGroup
   isLoading = false
-  isShowNextBtn = false
+  isDisableBtn = true
   errorMsg = ''
 
   constructor(
@@ -37,10 +37,14 @@ export class AuthTelStepComponent extends BaseComponent {
     tel = tel.replace(/[^0-9]/g, '')
     if (!tel.match(/^\+.*/g) && tel.length) tel = '+' + tel
 
+    this.isDisableBtn = true
+
     for (let i = this.telCodes.length - 1; i >= 0; i--) {
       if (!tel.includes(this.telCodes[i])) continue
 
       let telPart = tel.slice(this.telCodes[i].length, tel.length)
+
+      this.isDisableBtn = telPart.length === 0
 
       let j = 0
       while (j < telPart.length) {

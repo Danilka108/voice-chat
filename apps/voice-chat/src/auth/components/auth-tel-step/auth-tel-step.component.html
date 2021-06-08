@@ -11,10 +11,13 @@
         (input)="onTelChange()"
       />
       <mat-icon matSuffix>phone</mat-icon>
+      <mat-error class="error">sdfdsf{{errorMsg}}</mat-error>
     </mat-form-field>
-    <button [disabled]="isLoading" [class.visible]="isShowNextBtn" type="submit" mat-flat-button color="primary" class="btn">
+    <button [disabled]="isDisableBtn" type="submit" mat-flat-button color="primary" class="btn">
       <div class="btn-content">
-        next
+        <span *ngIf="!isLoading">next</span>
+        <span *ngIf="isLoading">please wait</span>
+        <mat-spinner *ngIf="isLoading" class="spinner" diameter="30" strokeWidth="2"></mat-spinner>
       </div>
     </button>
   </form>
