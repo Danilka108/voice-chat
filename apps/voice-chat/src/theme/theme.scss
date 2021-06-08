@@ -250,9 +250,9 @@ body {
   @include mat.all-component-themes($altTheme);
 
   --text-color: #{$light-text};
-  --primary-color: #{$light-primary-text};
-  --accent-color: #{$light-accent-text};
-  --disabled-color: #{$light-disabled-text};
+  --primary-text-color: #{$light-primary-text};
+  --accent-text-color: #{$light-accent-text};
+  --disabled-text-color: #{$light-disabled-text};
   --dividers-color: #{$light-dividers};
   --focused-color: #{$light-focused};
 }

@@ -3,7 +3,7 @@ import { authPath } from './app-routing.constants'
 
 export const routes: Routes = [
   {
-    path: authPath.absolute,
+    path: '',
     loadChildren: () => import('../auth/auth.module').then((m) => m.AuthModule),
   },
 ]
