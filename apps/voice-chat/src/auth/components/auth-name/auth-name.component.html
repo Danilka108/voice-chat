@@ -1,0 +1,11 @@
+<vc-auth-wrapper [currentStep]="currentStep" [step]="step">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+    <p class="emoji">💁‍♂️</p>
+    <h2 class="mat-h2">Enter your name</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>name</mat-label>
+      <input (input)="onInput()" matInput formControlName="name" type="text">
+    </mat-form-field>
+    <button [disabled]="isBtnDisabled" mat-flat-button color="primary">Next</button>
+  </form>
+</vc-auth-wrapper>

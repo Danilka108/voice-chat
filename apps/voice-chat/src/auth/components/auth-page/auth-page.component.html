@@ -1,7 +1,13 @@
-<button (click)="increaseStep()">Increase Step</button>
+<!-- <button (click)="increaseStep()">Increase Step</button> -->
+<form [formGroup]="formGroup">
 <div class="wrapper">
-  <div class="steps-wrapper">
-    <vc-auth-tel-step></vc-auth-tel-step>
+  <vc-auth-welcome [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-welcome>
+  <vc-auth-name [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-name>
+  <vc-auth-tel [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-tel>
+    <!-- <vc-auth-welcome></vc-auth-welcome> -->
+    <!-- <vc-auth-name></vc-auth-name> -->
+    <!-- <vc-auth-tel></vc-auth-tel> -->
+    <!-- <vc-auth-tel-step></vc-auth-tel-step> -->
     <!-- <div
       [@stepAnimation]="step === 0 ? 'selected' : 'unselected'"
       class="steps-item f"
@@ -18,5 +24,5 @@
       "
       class="steps-item t"
     ></div> -->
-  </div>
 </div>
+</form>

@@ -6,13 +6,21 @@ import { RouterModule } from '@angular/router'
 import { MaterialModule } from '../material/material.module'
 import { routes } from './auth.routes'
 import { AuthPageComponent } from './components/auth-page/auth-page.component'
-import { AuthStepComponent } from './components/auth-step/auth-step.component'
-import { AuthTelStepComponent } from './components/auth-tel-step/auth-tel-step.component'
+import { AuthWrapperComponent } from './components/auth-wrapper/auth-wrapper.component'
+import { AuthTelComponent } from './components/auth-tel/auth-tel.component'
 import { HttpService } from './shared/http.service'
 import { telCodesFactory, TEL_CODES } from './tel-codes'
+import { AuthWelcomeComponent } from './components/auth-welcome/auth-welcome.component'
+import { AuthNameComponent } from './components/auth-name/auth-name.component'
 
 @NgModule({
-  declarations: [AuthPageComponent, AuthTelStepComponent, AuthStepComponent],
+  declarations: [
+    AuthPageComponent,
+    AuthTelComponent,
+    AuthWrapperComponent,
+    AuthWelcomeComponent,
+    AuthNameComponent,
+  ],
   imports: [
     HttpClientModule,
     CommonModule,

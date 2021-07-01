@@ -1,0 +1,19 @@
+.btn-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-sign-up {
+  display: block;
+}
+
+.btn-sign-in {
+  padding: 0 6px;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}

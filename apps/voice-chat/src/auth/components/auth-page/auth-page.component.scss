@@ -6,29 +6,13 @@
   align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-.steps-wrapper {
-  border: 1px solid var(--dividers-color);
-  border-radius: 1rem;
   position: relative;
-  overflow: hidden;
 }
 
-.steps-item {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+// .steps-wrapper {
+//   border: 1px solid var(--dividers-color);
+//   border-radius: 1rem;
+//   position: relative;
+//   overflow: hidden;
 
-  &.f {
-    background-color: blue;
-  }
-
-  &.s {
-    background-color: green;
-  }
-
-  &.t {
-    background-color: yellow;
-  }
-}
+// }

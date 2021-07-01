@@ -3,26 +3,27 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export const stepAnimation = (timingMs: number) =>
   trigger('stepAnimation', [
     state(
-      'not-used',
+      'next',
       style({
-        right: '-100%',
+        transform: 'translate(50%, -50%)',
         opacity: '0%',
       })
     ),
     state(
-      'selected',
+      'current',
       style({
-        right: '0%',
+        transform: 'translate(-50%, -50%)',
         opacity: '100%',
       })
     ),
     state(
-      'unselected',
+      'prev',
       style({
-        right: '100%',
+        transform: 'translate(-100%, -50%)',
         opacity: '0%',
       })
     ),
-    transition('not-used => selected', animate(`${timingMs}ms`)),
-    transition('selected => unselected', animate(`${timingMs}ms`)),
+    transition('current <=> next', animate(`${timingMs}ms`)),
+    transition('prev <=> current', animate(`${timingMs}ms`)),
+    transition('prev <=> next', animate(`${timingMs}ms`)),
   ])
