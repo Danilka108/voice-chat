@@ -1,0 +1,13 @@
+<vc-auth-wrapper [currentStep]="currentStep" [step]="step">
+  <vc-auth-emoji>🎉</vc-auth-emoji>
+
+  <vc-auth-header>Welcome</vc-auth-header>
+
+  <vc-auth-text>
+    This is a space for casual, drop-in audio conversations—with friends and other interesting people around the world.
+  </vc-auth-text>
+
+  <vc-auth-btn (clickEvent)="onSignUp()">Sign up</vc-auth-btn>
+  
+  <vc-auth-btn (clickEvent)="onSignIn()" [secondary]="true">Already have account</vc-auth-btn>
+</vc-auth-wrapper>

@@ -8,9 +8,11 @@ export interface AuthTelReq {
 }
 
 export interface AuthCodeReq {
+  tel: string
   code: number
   browser: string
   os: string
+  name?: string
 }
 
 export interface AuthRefreshTokenReq {

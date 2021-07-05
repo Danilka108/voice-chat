@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   async code(
-    { tel, code, browser, os }: AuthCodeDto,
+    { tel, code, browser, os, name }: AuthCodeDto,
     ip: string
   ): Promise<{
     accessToken: string
@@ -95,8 +95,12 @@ export class AuthService {
 
     let user = await this.userDBService.findByTel(tel)
 
+    if (user === null && name.length === 0) {
+      throw new BadRequestException('Auth error. A name is required to create a user.')
+    }
+
     if (user === null) {
-      user = await this.userDBService.create('', tel)
+      user = await this.userDBService.create(name, tel)
     }
 
     const accessToken = this.sessionService.createAccessToken(user.id, user.tel)

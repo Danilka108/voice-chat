@@ -1,28 +1,22 @@
-<!-- <button (click)="increaseStep()">Increase Step</button> -->
 <form [formGroup]="formGroup">
-<div class="wrapper">
-  <vc-auth-welcome [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-welcome>
-  <vc-auth-name [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-name>
-  <vc-auth-tel [currentStep]="step" (stateChange)="onStateChange($event)"></vc-auth-tel>
-    <!-- <vc-auth-welcome></vc-auth-welcome> -->
-    <!-- <vc-auth-name></vc-auth-name> -->
-    <!-- <vc-auth-tel></vc-auth-tel> -->
-    <!-- <vc-auth-tel-step></vc-auth-tel-step> -->
-    <!-- <div
-      [@stepAnimation]="step === 0 ? 'selected' : 'unselected'"
-      class="steps-item f"
-    ></div>
-    <div
-      [@stepAnimation]="
-        step === 1 ? 'selected' : step > 1 ? 'unselected' : 'not-used'
-      "
-      class="steps-item s"
-    ></div>
-    <div
-      [@stepAnimation]="
-        step === 2 ? 'selected' : step > 2 ? 'unselected' : 'not-used'
-      "
-      class="steps-item t"
-    ></div> -->
-</div>
+  <div class="wrapper">
+    <vc-auth-step-welcome
+      [currentStep]="step"
+      (stepChange)="onStepChange($event)"
+    ></vc-auth-step-welcome>
+    <vc-auth-step-name
+      [currentStep]="step"
+      (stepChange)="onStepChange($event)"
+    ></vc-auth-step-name>
+    <vc-auth-step-tel
+      [loading]="isTelLoading"
+      [currentStep]="step"
+      (stepChange)="onStepChange($event)"
+    ></vc-auth-step-tel>
+    <vc-auth-step-code
+      [loading]="isCodeLoading"
+      [currentStep]="step"
+      (stepChange)="onStepChange($event)"
+    ></vc-auth-step-code>
+  </div>
 </form>

@@ -20,6 +20,7 @@ export class AuthController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('code')
   async code(@Body() authCodeDto: AuthCodeDto, @Ip() ip: string): Promise<AuthCodeRes> {
     const result = await this.authService.code(authCodeDto, ip)

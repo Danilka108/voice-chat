@@ -13,4 +13,7 @@ export class AuthCodeDto implements AuthCodeReq {
 
   @IsString()
   os!: string
+
+  @IsString()
+  name!: string
 }

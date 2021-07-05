@@ -1,18 +1,10 @@
-.btn-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
 button {
+  min-width: 9.5rem;
   display: flex;
   justify-content: center;
 }
 
-.btn-sign-up {
-  display: block;
-}
-
-.btn-sign-in {
+.secondary {
   padding: 0 6px;
   font-weight: 400;
   margin-top: 0.5rem;

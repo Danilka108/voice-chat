@@ -25,5 +25,5 @@ export const stepAnimation = (timingMs: number) =>
     ),
     transition('current <=> next', animate(`${timingMs}ms`)),
     transition('prev <=> current', animate(`${timingMs}ms`)),
-    transition('prev <=> next', animate(`${timingMs}ms`)),
+    // transition('prev <=> next', animate(`${timingMs}ms`)),
   ])

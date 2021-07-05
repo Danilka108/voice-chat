@@ -1,16 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { ControlContainer, FormBuilder, FormGroup } from '@angular/forms'
-import { AuthSteps, AuthStepStates } from '../../enums'
-import { AuthNameStepState } from '../../types'
+import { AuthSteps } from '../../shared/enums'
 
 @Component({
-  selector: 'vc-auth-name',
-  templateUrl: './auth-name.component.html',
-  styleUrls: ['./auth-name.component.scss'],
+  selector: 'vc-auth-step-name',
+  templateUrl: './auth-step-name.component.html',
+  styleUrls: ['./auth-step-name.component.scss'],
 })
-export class AuthNameComponent implements OnInit {
+export class AuthStepNameComponent implements OnInit {
   @Input() currentStep!: number
-  @Output() stateChange = new EventEmitter<AuthNameStepState>()
+  @Output() stepChange = new EventEmitter<AuthSteps>()
 
   step!: number
   formGroup!: FormGroup
@@ -40,9 +39,8 @@ export class AuthNameComponent implements OnInit {
   }
 
   onSubmit() {
-    this.stateChange.emit({
-      state: AuthStepStates.Name,
-      nextState: AuthStepStates.Tel,
-    })
+    if (this.isBtnDisabled) return
+
+    this.stepChange.emit(AuthSteps.Tel)
   }
 }

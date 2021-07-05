@@ -12,12 +12,7 @@ export class CacheAuthSessionService {
   ) {}
 
   async set(data: CacheAuthSession, refreshToken: string) {
-    const key: CacheAuthSession = {
-      id: data.id,
-      browser: data.browser,
-      os: data.os,
-      ip: data.ip,
-    }
+    const key = JSON.stringify(data, Object.keys(data).sort())
 
     const value: CacheAuthSessionValue = {
       refreshToken,
@@ -25,18 +20,13 @@ export class CacheAuthSessionService {
 
     const sessionTTL = this.configService.get<number>('auth.session.ttl') || 0
 
-    await this.cacheManager.set(JSON.stringify(key), JSON.stringify(value), 'EX', sessionTTL)
+    await this.cacheManager.set(key, JSON.stringify(value), 'EX', sessionTTL)
   }
 
   async get(data: CacheAuthSession) {
-    const key: CacheAuthSession = {
-      id: data.id,
-      browser: data.browser,
-      os: data.os,
-      ip: data.ip,
-    }
+    const key = JSON.stringify(data, Object.keys(data).sort())
 
-    const cachedDataValue = await this.cacheManager.get(JSON.stringify(key))
+    const cachedDataValue = await this.cacheManager.get(key)
 
     if (cachedDataValue === null) return null
 
@@ -48,13 +38,8 @@ export class CacheAuthSessionService {
   }
 
   async del(data: CacheAuthSession): Promise<void> {
-    const key: CacheAuthSession = {
-      id: data.id,
-      browser: data.browser,
-      os: data.os,
-      ip: data.ip,
-    }
+    const key = JSON.stringify(data, Object.keys(data).sort())
 
-    await this.cacheManager.del(JSON.stringify(key))
+    await this.cacheManager.del(key)
   }
 }

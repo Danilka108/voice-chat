@@ -10,8 +10,20 @@ export class SessionService {
   constructor(private readonly configService: ConfigService) {}
 
   createAuthCode(): number {
-    const codeMax = this.configService.get<number>('auth.code.max') || 0
-    const code = crypto.randomInt(codeMax)
+    const codeLen = this.configService.get<number>('auth.code.len') || 0
+
+    let min = '1'
+    let max = ''
+
+    for (let i = 0; i < codeLen; i++) {
+      if (i !== 0) {
+        min += '0'
+      }
+
+      max += '9'
+    }
+
+    const code = crypto.randomInt(parseInt(min), parseInt(max))
 
     return code
   }
