@@ -1,38 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { AuthDecoded } from '../common/interfaces/auth-decoded.interface'
+import { isAuthDecoded } from '../common/validators/is-auth-decoded.validator'
 import * as jwt from 'jsonwebtoken'
 import * as crypto from 'crypto'
-import { isAuthDecoded } from '../common/validators/is-auth-decoded.validator'
-import { AuthDecoded } from '../common/interfaces/auth-decoded.interface'
 
 @Injectable()
-export class SessionService {
+export class TokenService {
   constructor(private readonly configService: ConfigService) {}
 
-  createAuthCode(): number {
-    const codeLen = this.configService.get<number>('auth.code.len') || 0
-
-    let min = '1'
-    let max = ''
-
-    for (let i = 0; i < codeLen; i++) {
-      if (i !== 0) {
-        min += '0'
-      }
-
-      max += '9'
-    }
-
-    const code = crypto.randomInt(parseInt(min), parseInt(max))
-
-    return code
-  }
-
-  createAccessToken(userID: number, tel: string): string {
+  createAccessToken(data: AuthDecoded): string {
     const expiresIn = this.configService.get<number>('token.accessToken.expiresIn') || 0
     const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
-    const token = jwt.sign({ userID, tel }, secret, {
+    const token = jwt.sign(data, secret, {
       expiresIn,
     })
 
@@ -47,14 +28,6 @@ export class SessionService {
     }
 
     return decoded as AuthDecoded
-  }
-
-  createRefreshToken(): string {
-    const randomBytes = crypto.randomBytes(48)
-
-    const token = randomBytes.toString('hex')
-
-    return token
   }
 
   async verifyAccessToken(accessToken: string): Promise<AuthDecoded | null> {
@@ -72,5 +45,13 @@ export class SessionService {
     })
 
     return decoded
+  }
+
+  createRefreshToken(): string {
+    const randomBytes = crypto.randomBytes(64)
+
+    const token = randomBytes.toString('hex')
+
+    return token
   }
 }

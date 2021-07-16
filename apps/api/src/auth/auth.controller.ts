@@ -32,6 +32,7 @@ export class AuthController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('refresh-token')
   async refreshToken(
     @Body() authRefreshTokenDto: AuthRefreshTokenDto,
