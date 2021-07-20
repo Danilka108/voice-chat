@@ -1,40 +1,44 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthDecoded } from '../common/interfaces/auth-decoded.interface'
 import { isAuthDecoded } from '../common/validators/is-auth-decoded.validator'
-import * as jwt from 'jsonwebtoken'
-import * as crypto from 'crypto'
+import { TokenManager, TOKEN_MANAGER } from './token-manager.factory'
+import { CryptoManager, CRYPTO_MANAGER } from './crypto-manager.factory'
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @Inject(TOKEN_MANAGER) private readonly tokenManager: TokenManager,
+    @Inject(CRYPTO_MANAGER) private readonly cryptoManager: CryptoManager
+  ) {}
 
   createAccessToken(data: AuthDecoded): string {
     const expiresIn = this.configService.get<number>('token.accessToken.expiresIn') || 0
     const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
-    const token = jwt.sign(data, secret, {
+    const token = this.tokenManager.sign(data, secret, {
       expiresIn,
     })
 
     return token
   }
 
-  decodeAccessToken(accessToken: string): AuthDecoded | null {
-    const decoded = jwt.decode(accessToken)
+  decodeAccessToken(accessToken: string) {
+    const decoded = this.tokenManager.decode(accessToken)
 
     if (!isAuthDecoded(decoded)) {
       return null
     }
 
-    return decoded as AuthDecoded
+    return decoded
   }
 
   async verifyAccessToken(accessToken: string): Promise<AuthDecoded | null> {
     const secret = this.configService.get<string>('token.accessToken.secret') || ''
 
     const decoded = await new Promise<AuthDecoded | null>((resolve) => {
-      jwt.verify(accessToken, secret, {}, (error, data) => {
+      this.tokenManager.verify(accessToken, secret, {}, (error, data) => {
         if (error || !isAuthDecoded(data)) {
           resolve(null)
           return
@@ -48,7 +52,7 @@ export class TokenService {
   }
 
   createRefreshToken(): string {
-    const randomBytes = crypto.randomBytes(64)
+    const randomBytes = this.cryptoManager.randomBytes(64)
 
     const token = randomBytes.toString('hex')
 
