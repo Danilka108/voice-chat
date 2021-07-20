@@ -1,16 +1,16 @@
 import { ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
 import { CacheManager } from '../../cache/cache-manager'
-import { CacheCodeService } from './cache-code.service'
+import { CacheSessionService } from './cache-session.service'
 
-describe('CacheCodeService', () => {
-  let cacheCodeService: CacheCodeService
+describe('CacheSessionService', () => {
+  let cacheSessionService: CacheSessionService
   let cacheManager: CacheManager
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        CacheCodeService,
+        CacheSessionService,
         {
           provide: ConfigService,
           useValue: {
@@ -28,20 +28,20 @@ describe('CacheCodeService', () => {
       ],
     }).compile()
 
-    cacheCodeService = module.get(CacheCodeService)
+    cacheSessionService = module.get(CacheSessionService)
     cacheManager = module.get(CacheManager)
   })
 
   describe('set', () => {
     it('should call cacheManager', async () => {
-      await cacheCodeService.set(
+      await cacheSessionService.set(
         {
-          tel: 'test',
-          browser: '',
-          ip: '',
-          os: '',
+          id: 0,
+          ip: 'test',
+          os: 'test',
+          browser: 'test',
         },
-        999999
+        'test'
       )
 
       expect(jest.spyOn(cacheManager, 'set')).toBeCalled()
@@ -54,8 +54,8 @@ describe('CacheCodeService', () => {
     })
 
     it('should call cacheManager', async () => {
-      await cacheCodeService.get({
-        tel: '',
+      await cacheSessionService.get({
+        id: 0,
         browser: '',
         ip: '',
         os: '',
@@ -68,8 +68,8 @@ describe('CacheCodeService', () => {
       jest.spyOn(cacheManager, 'get').mockReturnValue(Promise.resolve(null))
 
       await expect(
-        cacheCodeService.get({
-          tel: '',
+        cacheSessionService.get({
+          id: 0,
           browser: '',
           ip: '',
           os: '',
@@ -79,8 +79,8 @@ describe('CacheCodeService', () => {
 
     it('should return null if found data is not valid', async () => {
       await expect(
-        cacheCodeService.get({
-          tel: '',
+        cacheSessionService.get({
+          id: 0,
           browser: '',
           ip: '',
           os: '',
@@ -91,8 +91,8 @@ describe('CacheCodeService', () => {
 
   describe('del', () => {
     it('should call cacheManager', async () => {
-      await cacheCodeService.del({
-        tel: '',
+      await cacheSessionService.del({
+        id: 0,
         browser: '',
         ip: '',
         os: '',
