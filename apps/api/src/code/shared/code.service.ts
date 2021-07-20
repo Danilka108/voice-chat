@@ -42,11 +42,9 @@ export class CodeService {
       (Date.now() - cacheCodeValue.createdAt) / 1000 <= periodOfBanOfRefreshCode
     ) {
       throw new NotAcceptableException(
-        `The waiting time for sending a message is ${
-          periodOfBanOfRefreshCode / 60
-        } minutes. Wait ${
+        `Wait ${
           periodOfBanOfRefreshCode - Math.round((Date.now() - cacheCodeValue.createdAt) / 1000)
-        } seconds.`
+        } seconds for send a new auth code.`
       )
     }
 
