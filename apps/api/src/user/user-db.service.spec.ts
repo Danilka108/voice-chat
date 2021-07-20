@@ -17,6 +17,7 @@ describe('UserDBService', () => {
           useValue: {
             findOne: jest.fn(),
             create: jest.fn(),
+            save: jest.fn(),
           },
         },
       ],
@@ -39,6 +40,14 @@ describe('UserDBService', () => {
       jest.spyOn(userRepo, 'findOne').mockReturnValue(Promise.resolve(undefined))
 
       await expect(userDBService.findByTel('')).resolves.toBeNull()
+    })
+  })
+
+  describe('create', () => {
+    it('should save new user', async () => {
+      await userDBService.create('', '')
+
+      expect(jest.spyOn(userRepo, 'save')).toBeCalled()
     })
   })
 })
