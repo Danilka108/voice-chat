@@ -8,7 +8,7 @@ import { NotificationsService } from './notifications.service'
   providers: [
     {
       provide: NotificationsService,
-      useClass: NotificationsDevService,
+      useClass: NotificationsService,
     },
     {
       provide: 'twilio',

@@ -14,7 +14,7 @@ export class NotificationsService implements INotificationsService {
     const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
 
     const message = await this.twilio.messages.create({
-      body: `Your security code: ${code}. Code lifetime is ${codeTTL / 60} minutes`,
+      body: `Your security code: ${code}. Code lifetime is ${codeTTL / (60 * 1000)} minutes`,
       from,
       to,
     })
