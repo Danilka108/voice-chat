@@ -210,10 +210,10 @@ describe('AuthService', () => {
     })
   })
 
-  describe('refresh-token', () => {
+  describe('refresh-session', () => {
     it('should verify session', async () => {
       try {
-        await authService.refreshToken(
+        await authService.refreshSession(
           { refreshToken: '', accessToken: '', browser: '', os: '' },
           ''
         )
@@ -226,7 +226,7 @@ describe('AuthService', () => {
 
     it('should create new session', async () => {
       try {
-        await authService.refreshToken(
+        await authService.refreshSession(
           { refreshToken: '', accessToken: '', browser: '', os: '' },
           ''
         )

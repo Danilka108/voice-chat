@@ -1,7 +1,7 @@
-import { AuthRefreshTokenReq } from '@voice-chat/api-interfaces'
+import { AuthRefreshSessionReq } from '@voice-chat/api-interfaces'
 import { IsString } from 'class-validator'
 
-export class AuthRefreshTokenDto implements AuthRefreshTokenReq {
+export class AuthRefreshSessionDto implements AuthRefreshSessionReq {
   @IsString()
   accessToken!: string
 

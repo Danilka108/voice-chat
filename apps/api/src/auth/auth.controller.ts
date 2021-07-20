@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Ip, Post } from '@nestjs/common'
-import { AuthCodeRes, AuthRefreshTokenRes } from '@voice-chat/api-interfaces'
+import { AuthCodeRes, AuthRefreshSessionRes } from '@voice-chat/api-interfaces'
 import { AuthService } from './auth.service'
 import { AuthCodeDto } from './dto/auth-code.dto'
-import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
+import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
 
 @Controller('auth')
@@ -35,10 +35,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('refresh-token')
   async refreshToken(
-    @Body() authRefreshTokenDto: AuthRefreshTokenDto,
+    @Body() authRefreshTokenDto: AuthRefreshSessionDto,
     @Ip() ip: string
-  ): Promise<AuthRefreshTokenRes> {
-    const result = await this.authService.refreshToken(authRefreshTokenDto, ip)
+  ): Promise<AuthRefreshSessionRes> {
+    const result = await this.authService.refreshSession(authRefreshTokenDto, ip)
 
     return {
       statusCode: 200,

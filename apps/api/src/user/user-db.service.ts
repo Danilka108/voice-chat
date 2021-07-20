@@ -31,7 +31,8 @@ export class UserDBService {
     const newUser = new User()
     newUser.name = name
     newUser.tel = tel
-    const createdUser = this.userRepo.create(newUser)
+
+    const createdUser = await this.userRepo.save(newUser)
 
     return createdUser
   }

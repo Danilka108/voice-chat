@@ -15,7 +15,7 @@ export interface AuthCodeReq {
   name?: string
 }
 
-export interface AuthRefreshTokenReq {
+export interface AuthRefreshSessionReq {
   accessToken: string
   refreshToken: string
   browser: string
@@ -30,7 +30,7 @@ export interface AuthCodeRes
     refreshToken: string
   }> {}
 
-export interface AuthRefreshTokenRes
+export interface AuthRefreshSessionRes
   extends BaseRes<{
     accessToken: string
     refreshToken: string

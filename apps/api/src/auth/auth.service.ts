@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { AuthCodeDto } from './dto/auth-code.dto'
-import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto'
+import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
 import { SessionService } from '../session/shared/session.service'
 import { NotificationsService } from '../notifications/notifications.service'
@@ -54,7 +54,9 @@ export class AuthService {
 
     if (user === null && name.trim().length === 0) {
       throw new BadRequestException('A name is required to create a user.')
-    } else if (user === null) {
+    }
+
+    if (user === null) {
       user = await this.userDBService.create(name, tel)
     }
 
@@ -72,8 +74,8 @@ export class AuthService {
     return result
   }
 
-  async refreshToken(
-    { refreshToken, accessToken, browser, os }: AuthRefreshTokenDto,
+  async refreshSession(
+    { refreshToken, accessToken, browser, os }: AuthRefreshSessionDto,
     ip: string
   ) {
     await this.sessionService.verify(accessToken, refreshToken, browser, os, ip)
