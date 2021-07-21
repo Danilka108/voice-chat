@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Component, Inject, Input, OnInit, Output } from '@angular/core'
+import { AfterViewInit, Component, Inject, Input, Output } from '@angular/core'
 import { ControlContainer, FormBuilder, FormGroup } from '@angular/forms'
 import { EventEmitter } from '@angular/core'
 import { AuthSteps } from '../../shared/enums'
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators'
   templateUrl: './auth-step-code.component.html',
   styleUrls: ['./auth-step-code.component.scss'],
 })
-export class AuthStepCodeComponent implements OnInit {
+export class AuthStepCodeComponent implements AfterViewInit {
   @Input() loading!: boolean
   @Input() currentStep!: number
   @Output() stepChange = new EventEmitter<AuthSteps>()
@@ -23,15 +23,20 @@ export class AuthStepCodeComponent implements OnInit {
   tel$!: Observable<string>
 
   constructor(
-    @Inject(AUTH_CODE_LEN) private authCodeLen: number,
-    private controlContainer: ControlContainer,
-    private fb: FormBuilder
+    @Inject(AUTH_CODE_LEN) readonly authCodeLen: number,
+    readonly controlContainer: ControlContainer,
+    fb: FormBuilder
   ) {
     this.step = AuthSteps.Code
+    this.formGroup = fb.group({
+      code: fb.control(null),
+    })
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const parentFormGroup = this.controlContainer.control as FormGroup
+
+    console.log(parentFormGroup, this.formGroup.parent)
 
     this.tel$ = parentFormGroup
       .get('tel-step')!
@@ -39,19 +44,9 @@ export class AuthStepCodeComponent implements OnInit {
       .valueChanges.pipe(
         map((v) => {
           const value = v as string | null
-
           return value ? value : ''
         })
       )
-
-    parentFormGroup.addControl(
-      'code-step',
-      this.fb.group({
-        code: this.fb.control(null),
-      })
-    )
-
-    this.formGroup = parentFormGroup.get('code-step') as FormGroup
   }
 
   onInput() {

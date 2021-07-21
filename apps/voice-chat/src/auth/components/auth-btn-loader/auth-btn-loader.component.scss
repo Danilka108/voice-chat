@@ -1,13 +1,16 @@
+button {
+  position: relative;
+}
+
 .content {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .spinner {
   position: absolute;
-  right: 0;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
 

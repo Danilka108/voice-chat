@@ -3,6 +3,7 @@
   <input
     [formControl]="formControl"
     matInput
+    #input
     [type]="type"
     (input)="inputEvent.emit($event)"
   />

@@ -1,23 +1,21 @@
-<vc-auth-wrapper [step]="step" [currentStep]="currentStep">
-  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <vc-auth-emoji>🔢</vc-auth-emoji>
+<vc-auth-form (submitEvent)="onSubmit()" FGroupName="code-step" [FGroup]="formGroup" [step]="step" [currentStep]="currentStep">
+  <vc-auth-emoji>🔢</vc-auth-emoji>
 
-    <vc-auth-sub-header>
-      <span>{{tel$ | async}}</span>
-      <button
-        (click)="onChangeTel()"
-        mat-icon-button
-        class="tel-btn"
-        aria-label="change phone number"
-      >
-        <mat-icon fontIcon>edit</mat-icon>
-      </button>
-    </vc-auth-sub-header>
+  <vc-auth-sub-header>
+    <span>{{tel$ | async}}</span>
+    <button
+      (click)="onChangeTel()"
+      mat-icon-button
+      class="tel-btn"
+      aria-label="change phone number"
+    >
+      <mat-icon fontIcon>edit</mat-icon>
+    </button>
+  </vc-auth-sub-header>
 
-    <vc-auth-header>Enter your auth code</vc-auth-header>
+  <vc-auth-header>Enter your auth code</vc-auth-header>
 
-    <vc-auth-input (inputEvent)="onInput()" label="code" controlName="code" type="number"></vc-auth-input>
+  <vc-auth-input (inputEvent)="onInput()" label="code" FControlName="code" type="number"></vc-auth-input>
 
-    <vc-auth-btn-loader [loading]="loading" [disabled]="isBtnDisabled"></vc-auth-btn-loader>
-  </form>
-</vc-auth-wrapper>
+  <vc-auth-btn-loader [loading]="loading" [disabled]="isBtnDisabled"></vc-auth-btn-loader>
+</vc-auth-form>

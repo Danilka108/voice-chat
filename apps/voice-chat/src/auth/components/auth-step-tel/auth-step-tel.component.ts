@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core'
-import { ControlContainer, FormBuilder, FormGroup } from '@angular/forms'
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core'
+import { FormBuilder, FormGroup } from '@angular/forms'
 import { TEL_CODES } from '../../factories/tel-codes.factory'
 import { AuthSteps } from '../../shared/enums'
 
@@ -8,7 +8,7 @@ import { AuthSteps } from '../../shared/enums'
   templateUrl: './auth-step-tel.component.html',
   styleUrls: ['./auth-step-tel.component.scss'],
 })
-export class AuthStepTelComponent implements OnInit {
+export class AuthStepTelComponent {
   @Input() loading!: boolean
   @Input() currentStep!: number
   @Output() stepChange = new EventEmitter<AuthSteps>()
@@ -17,25 +17,11 @@ export class AuthStepTelComponent implements OnInit {
   formGroup!: FormGroup
   isBtnDisabled = true
 
-  constructor(
-    @Inject(TEL_CODES) private readonly telCodes: string[],
-    private controlContainer: ControlContainer,
-    private fb: FormBuilder
-  ) {
+  constructor(@Inject(TEL_CODES) readonly telCodes: string[], fb: FormBuilder) {
     this.step = AuthSteps.Tel
-  }
-
-  ngOnInit() {
-    const parentFormGroup = this.controlContainer.control as FormGroup
-
-    parentFormGroup.addControl(
-      'tel-step',
-      this.fb.group({
-        tel: this.fb.control(null),
-      })
-    )
-
-    this.formGroup = parentFormGroup.get('tel-step') as FormGroup
+    this.formGroup = fb.group({
+      tel: fb.control(null),
+    })
   }
 
   onInput() {

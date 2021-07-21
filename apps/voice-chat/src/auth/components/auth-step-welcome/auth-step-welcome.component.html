@@ -1,4 +1,4 @@
-<vc-auth-wrapper [currentStep]="currentStep" [step]="step">
+<vc-auth-form FGroupName='welcome-step' [FGroup]="formGroup" [currentStep]="currentStep" [step]="step">
   <vc-auth-emoji>🎉</vc-auth-emoji>
 
   <vc-auth-header>Welcome</vc-auth-header>
@@ -10,4 +10,4 @@
   <vc-auth-btn (clickEvent)="onSignUp()">Sign up</vc-auth-btn>
   
   <vc-auth-btn (clickEvent)="onSignIn()" [secondary]="true">Already have account</vc-auth-btn>
-</vc-auth-wrapper>
+</vc-auth-form>

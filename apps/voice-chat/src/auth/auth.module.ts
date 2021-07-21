@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router'
 import { MaterialModule } from '../material/material.module'
 import { routes } from './auth.routes'
 import { AuthPageComponent } from './components/auth-page/auth-page.component'
-import { AuthWrapperComponent } from './components/auth-wrapper/auth-wrapper.component'
 import { HttpService } from './shared/http.service'
 import { telCodesFactory, TEL_CODES } from './factories/tel-codes.factory'
 import { AuthBtnLoaderComponent } from './components/auth-btn-loader/auth-btn-loader.component'
@@ -21,11 +20,12 @@ import { AuthStepCodeComponent } from './components/auth-step-code/auth-step-cod
 import { AuthStepTelComponent } from './components/auth-step-tel/auth-step-tel.component'
 import { AuthStepWelcomeComponent } from './components/auth-step-welcome/auth-step-welcome.component'
 import { AuthInputComponent } from './components/auth-input/auth-input.component'
+import { AuthFormComponent } from './components/auth-form/auth-form.component'
 
 @NgModule({
   declarations: [
     AuthPageComponent,
-    AuthWrapperComponent,
+    AuthFormComponent,
     AuthBtnLoaderComponent,
     AuthBtnComponent,
     AuthEmojiComponent,

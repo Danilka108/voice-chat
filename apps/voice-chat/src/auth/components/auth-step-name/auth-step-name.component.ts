@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { ControlContainer, FormBuilder, FormGroup } from '@angular/forms'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { FormBuilder, FormGroup } from '@angular/forms'
 import { AuthSteps } from '../../shared/enums'
 
 @Component({
@@ -7,7 +7,7 @@ import { AuthSteps } from '../../shared/enums'
   templateUrl: './auth-step-name.component.html',
   styleUrls: ['./auth-step-name.component.scss'],
 })
-export class AuthStepNameComponent implements OnInit {
+export class AuthStepNameComponent {
   @Input() currentStep!: number
   @Output() stepChange = new EventEmitter<AuthSteps>()
 
@@ -15,21 +15,11 @@ export class AuthStepNameComponent implements OnInit {
   formGroup!: FormGroup
   isBtnDisabled = true
 
-  constructor(private controlContainer: ControlContainer, private fb: FormBuilder) {
+  constructor(fb: FormBuilder) {
     this.step = AuthSteps.Name
-  }
-
-  ngOnInit() {
-    const parentFormGroup = <FormGroup>this.controlContainer.control
-
-    parentFormGroup.addControl(
-      'name-step',
-      this.fb.group({
-        name: this.fb.control(null),
-      })
-    )
-
-    this.formGroup = parentFormGroup.get('name-step') as FormGroup
+    this.formGroup = fb.group({
+      name: fb.control(null),
+    })
   }
 
   onInput() {

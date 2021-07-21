@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormBuilder, FormGroup } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { BaseComponent } from '../../../core/shared/base-component'
@@ -11,7 +11,7 @@ import { HttpService } from '../../shared/http.service'
   templateUrl: './auth-page.component.html',
   styleUrls: ['./auth-page.component.scss'],
 })
-export class AuthPageComponent extends BaseComponent implements OnInit {
+export class AuthPageComponent extends BaseComponent {
   formGroup!: FormGroup
 
   isTelLoading = false
@@ -19,15 +19,12 @@ export class AuthPageComponent extends BaseComponent implements OnInit {
   step = 0
 
   constructor(
-    private fb: FormBuilder,
-    private matSnackBar: MatSnackBar,
-    private httpService: HttpService
+    fb: FormBuilder,
+    readonly matSnackBar: MatSnackBar,
+    readonly httpService: HttpService
   ) {
     super()
-  }
-
-  ngOnInit() {
-    this.formGroup = this.fb.group({})
+    this.formGroup = fb.group({})
   }
 
   onStepChange(nextStep: AuthSteps) {
