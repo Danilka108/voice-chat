@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  margin: 0;
+  font-size: 1rem;
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+input {
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

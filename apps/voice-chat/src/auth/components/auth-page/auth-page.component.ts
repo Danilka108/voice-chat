@@ -1,10 +1,13 @@
-import { Component } from '@angular/core'
-import { FormBuilder, FormGroup } from '@angular/forms'
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, RequiredValidator, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { BaseComponent } from '../../../core/shared/base-component'
-import { map } from 'rxjs/operators'
+import { map, tap } from 'rxjs/operators'
 import { AuthSteps } from '../../shared/enums'
 import { HttpService } from '../../shared/http.service'
+import { pipe } from 'rxjs'
+
+const NOT_CREATED_USER_HTTP_CODE = 406
 
 @Component({
   selector: 'vc-auth-page',
@@ -14,98 +17,113 @@ import { HttpService } from '../../shared/http.service'
 export class AuthPageComponent extends BaseComponent {
   formGroup!: FormGroup
 
-  isTelLoading = false
-  isCodeLoading = false
-  step = 0
+  // isTelLoading = false
+  // isCodeLoading = false
+  // isBtnLoading = false
+  // isBtnDisabled = false
+  // step = 0
+  // stepsMaxWith = 0
+
+  pipe = pipe(tap(() => console.log('sdfsdf')))
 
   constructor(
-    fb: FormBuilder,
+    readonly fb: FormBuilder,
     readonly matSnackBar: MatSnackBar,
     readonly httpService: HttpService
   ) {
     super()
-    this.formGroup = fb.group({})
-  }
-
-  onStepChange(nextStep: AuthSteps) {
-    if (nextStep === AuthSteps.Code) {
-      this.formGroup.get('code-step')?.get('code')?.reset()
-      this.onTelSubmit()
-    } else if (nextStep == AuthSteps.Finish) {
-      this.onCodeSubmit()
-    } else {
-      this.step = nextStep
-    }
-  }
-
-  pushError(msg: string) {
-    this.matSnackBar.open(msg, 'ok', {
-      duration: 3000,
+    this.formGroup = fb.group({
+      'step-a': fb.group({
+        'field-a': fb.control(null, Validators.required),
+        'field-b': fb.control(null),
+      }),
     })
   }
 
-  onTelSubmit() {
-    this.isTelLoading = true
+  // increateStep() {
+  //   this.changeStep(this.step + 1)
+  // }
 
-    const tel = this.formGroup.get('tel-step')?.get('tel')?.value as null | string
+  // changeStep(nextStep: AuthSteps) {
+  //   this.step = nextStep
+  //   // if (nextStep === AuthSteps.Code) {
+  //   //   this.formGroup.get('code-step')?.get('code')?.reset()
+  //   //   this.onTelSubmit()
+  //   // } else if (nextStep == AuthSteps.Finish) {
+  //   //   this.onCodeSubmit()
+  //   // } else {
+  //   //   this.step = nextStep
+  //   // }
+  // }
 
-    if (!tel) {
-      this.pushError('Error. The phone number must be filled')
-      return
-    }
+  // pushError(msg: string) {
+  //   this.matSnackBar.open(msg, 'ok', {
+  //     duration: 3000,
+  //   })
+  // }
 
-    this.subscription = this.httpService
-      .tel(tel)
-      .pipe(
-        map((res) => {
-          if (res.status === 'OK') {
-            this.step = AuthSteps.Code
-          } else {
-            this.pushError(res.message)
-          }
+  // onTelSubmit() {
+  //   this.isTelLoading = true
 
-          this.isTelLoading = false
-        })
-      )
-      .subscribe()
-  }
+  //   const tel = this.formGroup.get('tel-step')?.get('tel')?.value as null | string
 
-  onCodeSubmit() {
-    this.isCodeLoading = true
+  //   if (!tel) {
+  //     this.pushError('Error. The phone number must be filled')
+  //     return
+  //   }
 
-    const name = this.formGroup.get('name-step')?.get('name')?.value as null | string
-    const tel = this.formGroup.get('tel-step')?.get('tel')?.value as null | string
-    const code = this.formGroup.get('code-step')?.get('code')?.value as null | number
+  //   this.subscription = this.httpService
+  //     .tel(tel)
+  //     .pipe(
+  //       map((res) => {
+  //         if (res.status === 'OK') {
+  //           this.step = AuthSteps.Code
+  //         } else {
+  //           this.pushError(res.message)
+  //         }
 
-    if (!code) {
-      this.pushError('Error. The auth code must be filled')
-      return
-    }
+  //         this.isTelLoading = false
+  //       })
+  //     )
+  //     .subscribe()
+  // }
 
-    if (!tel) {
-      this.step = AuthSteps.Tel
-      this.pushError('Error. The phone number must be filled')
-      return
-    }
+  // onCodeSubmit() {
+  //   this.isCodeLoading = true
 
-    this.subscription = this.httpService
-      .code(tel, code, name)
-      .pipe(
-        map((res) => {
-          if (res.status === 'OK') {
-            this.step = AuthSteps.Finish
-          } else {
-            this.pushError(res.message)
-          }
+  //   const name = this.formGroup.get('name-step')?.get('name')?.value as null | string
+  //   const tel = this.formGroup.get('tel-step')?.get('tel')?.value as null | string
+  //   const code = this.formGroup.get('code-step')?.get('code')?.value as null | number
 
-          if (res.statusCode === 400) {
-            this.step = AuthSteps.Name
-            this.formGroup.get('code-step')?.get('code')?.reset()
-          }
+  //   if (!code) {
+  //     this.pushError('Error. The auth code must be filled')
+  //     return
+  //   }
 
-          this.isCodeLoading = false
-        })
-      )
-      .subscribe()
-  }
+  //   if (!tel) {
+  //     this.step = AuthSteps.Tel
+  //     this.pushError('Error. The phone number must be filled')
+  //     return
+  //   }
+
+  //   this.subscription = this.httpService
+  //     .code(tel, code, name)
+  //     .pipe(
+  //       map((res) => {
+  //         if (res.status === 'OK') {
+  //           this.step = AuthSteps.Finish
+  //         } else {
+  //           this.pushError(res.message)
+  //         }
+
+  //         if (res.statusCode === NOT_CREATED_USER_HTTP_CODE) {
+  //           this.step = AuthSteps.Name
+  //           this.formGroup.get('code-step')?.get('code')?.reset()
+  //         }
+
+  //         this.isCodeLoading = false
+  //       })
+  //     )
+  //     .subscribe()
+  // }
 }

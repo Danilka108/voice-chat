@@ -21,6 +21,8 @@ import { AuthStepTelComponent } from './components/auth-step-tel/auth-step-tel.c
 import { AuthStepWelcomeComponent } from './components/auth-step-welcome/auth-step-welcome.component'
 import { AuthInputComponent } from './components/auth-input/auth-input.component'
 import { AuthFormComponent } from './components/auth-form/auth-form.component'
+import { AuthContainerComponent } from './components/auth-container/auth-container.component'
+import { StepperModule } from '../stepper'
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component'
     AuthStepTelComponent,
     AuthStepWelcomeComponent,
     AuthInputComponent,
+    AuthContainerComponent,
   ],
   imports: [
     HttpClientModule,
@@ -45,6 +48,7 @@ import { AuthFormComponent } from './components/auth-form/auth-form.component'
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    StepperModule,
   ],
   providers: [
     HttpService,

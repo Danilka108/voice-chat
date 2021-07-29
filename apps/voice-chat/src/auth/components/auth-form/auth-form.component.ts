@@ -1,6 +1,16 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core'
 import { ControlContainer, FormGroup, NgForm } from '@angular/forms'
 import { stepAnimation } from '../../animations/step.animation'
+import { AuthContainer } from '../auth-container/auth-container'
 import { AUTH_FORM } from './auth-form.token'
 
 @Component({
@@ -24,9 +34,13 @@ export class AuthFormComponent implements OnInit {
   @Input() FGroupName!: string
   @Input() step!: number
   @Input() currentStep!: number
+
   @Output() submitEvent = new EventEmitter<any>()
 
-  @HostBinding('@stepAnimation') get getStepAnimation(): string {
+  @ViewChild('form') formRef!: ElementRef<HTMLElement>
+
+  @HostBinding('@stepAnimation')
+  get getStepAnimation(): string {
     return this.currentStep === this.step
       ? 'current'
       : this.currentStep > this.step
@@ -34,7 +48,11 @@ export class AuthFormComponent implements OnInit {
       : 'next'
   }
 
-  constructor(readonly controlContainer: ControlContainer, readonly ngForm: NgForm) {}
+  constructor(
+    readonly authContainer: AuthContainer,
+    readonly controlContainer: ControlContainer,
+    readonly ngForm: NgForm
+  ) {}
 
   ngOnInit(): void {
     const parentFormGroup = this.controlContainer.control as FormGroup

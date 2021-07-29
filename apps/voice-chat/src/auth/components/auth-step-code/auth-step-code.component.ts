@@ -36,8 +36,6 @@ export class AuthStepCodeComponent implements AfterViewInit {
   ngAfterViewInit() {
     const parentFormGroup = this.controlContainer.control as FormGroup
 
-    console.log(parentFormGroup, this.formGroup.parent)
-
     this.tel$ = parentFormGroup
       .get('tel-step')!
       .get('tel')!

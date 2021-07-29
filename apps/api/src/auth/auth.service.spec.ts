@@ -4,7 +4,7 @@ import { NotificationsService } from '../notifications/notifications.service'
 import { UserDBService } from '../user/user-db.service'
 import { CodeService } from '../code/shared/code.service'
 import { SessionService } from '../session/shared/session.service'
-import { BadRequestException } from '@nestjs/common'
+import { BadRequestException, NotAcceptableException } from '@nestjs/common'
 
 jest.mock('../session/shared/session.service')
 jest.mock('../code/shared/code.service')
@@ -143,7 +143,7 @@ describe('AuthService', () => {
       it('should throw bad request error if name is missing', async () => {
         await expect(
           authService.code({ tel: '', code: 0, browser: '', os: '', name: '' }, '')
-        ).rejects.toThrowError(BadRequestException)
+        ).rejects.toThrowError(NotAcceptableException)
       })
 
       it('should create new user if name is not missing', async () => {

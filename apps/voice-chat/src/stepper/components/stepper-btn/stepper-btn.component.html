@@ -1,0 +1,7 @@
+<button [disabled]="disabled" mat-flat-button color="primary">
+  <div class="content">
+    <span *ngIf="!loading">next</span>
+    <span *ngIf="loading">please wait</span>
+    <mat-spinner *ngIf="loading" class="spinner" diameter="20" strokeWidth="2"></mat-spinner>
+  </div>
+</button>

@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label>&#00;{{label}}</mat-label>
+  <input
+    [formControl]="control"
+    matInput
+    [type]="type"
+    (input)="input.emit($event)"
+  />
+  <mat-error>{{getError()}}</mat-error>
+</mat-form-field>

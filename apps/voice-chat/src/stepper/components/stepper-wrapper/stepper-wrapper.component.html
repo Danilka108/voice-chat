@@ -1,0 +1,6 @@
+<form [formGroup]="group">
+  <div class="steps" [style.height]="height">
+    <ng-content></ng-content>
+  </div>
+  <vc-stepper-btn (click)="onBtnClick()" [disabled]="false" [loading]="false"></vc-stepper-btn>
+</form>

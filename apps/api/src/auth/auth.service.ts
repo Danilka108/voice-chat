@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, NotAcceptableException } from '@nestjs/common'
 import { AuthCodeDto } from './dto/auth-code.dto'
 import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
 import { AuthTelDto } from './dto/auth-tel.dto'
@@ -53,7 +53,7 @@ export class AuthService {
     let user = await this.userDBService.findByTel(tel)
 
     if (user === null && name.trim().length === 0) {
-      throw new BadRequestException('A name is required to create a user.')
+      throw new NotAcceptableException('A name is required to create a user.')
     }
 
     if (user === null) {

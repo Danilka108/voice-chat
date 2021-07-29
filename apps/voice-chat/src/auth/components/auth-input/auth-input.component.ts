@@ -47,7 +47,6 @@ export class AuthInputComponent extends BaseComponent implements OnInit, AfterVi
     this.subscription = this.ngForm.ngSubmit
       .pipe(
         tap(() => {
-          console.log(this.FControlName, ' submit')
           input.blur()
         })
       )

@@ -1,8 +1,7 @@
 :host {
   display: block;
-  width: 22rem;
+  width: var(--steppers-item-width);
   box-sizing: border-box;
-  padding: 2rem;
   position: absolute;
   top: 50%;
   left: 50%;
