@@ -6,6 +6,5 @@ import { Component, Input } from '@angular/core'
   styleUrls: ['./stepper-btn.component.scss'],
 })
 export class StepperBtnComponent {
-  @Input() disabled!: boolean
-  @Input() loading!: boolean
+  @Input() loading!: boolean | null
 }

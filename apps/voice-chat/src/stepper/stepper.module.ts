@@ -3,29 +3,18 @@ import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { StepperWrapperComponent } from './components/stepper-wrapper/stepper-wrapper.component'
 import { StepperItemComponent } from './components/stepper-item/stepper-item.component'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { StepperInputComponent } from './components/stepper-input/stepper-input.component'
-import { MatInputModule } from '@angular/material/input'
+import { StepperFieldComponent } from './components/stepper-field/stepper-field.component'
 import { StepperBtnComponent } from './components/stepper-btn/stepper-btn.component'
-import { MatButtonModule } from '@angular/material/button'
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MaterialModule } from '../material/material.module'
 
 @NgModule({
-  imports: [
-    MatInputModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
+  imports: [MaterialModule, CommonModule, FormsModule, ReactiveFormsModule],
   declarations: [
     StepperBtnComponent,
-    StepperInputComponent,
+    StepperFieldComponent,
     StepperItemComponent,
     StepperWrapperComponent,
   ],
-  exports: [StepperInputComponent, StepperItemComponent, StepperWrapperComponent],
+  exports: [StepperFieldComponent, StepperItemComponent, StepperWrapperComponent],
 })
 export class StepperModule {}

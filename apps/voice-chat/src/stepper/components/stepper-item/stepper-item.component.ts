@@ -1,25 +1,20 @@
 /* eslint-disable @angular-eslint/no-output-native */
-import { Component, Input, OnInit, HostBinding, OnDestroy, ElementRef } from '@angular/core'
+import { Component, Input, OnInit, HostBinding, OnDestroy, AfterViewInit } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { of, Subject, Subscription, UnaryFunction } from 'rxjs'
-import { catchError, filter, tap } from 'rxjs/operators'
+import { of, Subscription, UnaryFunction } from 'rxjs'
 import { changeStepAnimation } from '../../animations/change-step.animation'
-import {
-  getFormGroupIsMissingInStepperWrapperFormGroupError,
-  getInputsIsMissingInStepperItemError,
-  getStepperItemIsNotInStepperWrapperError,
-} from '../../stepper-errors'
-import { WrapperContainer } from '../stepper-wrapper/wrapper-container'
-import { ItemContainer } from './item-container'
+import { StepperItemController } from '../../controllers/stepper-item.controller'
+import { StepperItemContainer } from '../../containers/stepper-item.container'
+import { catchError } from 'rxjs/operators'
 
 @Component({
   selector: 'vc-stepper-item',
   templateUrl: './stepper-item.component.html',
   styleUrls: ['./stepper-item.component.scss'],
   animations: [changeStepAnimation(200)],
-  providers: [ItemContainer],
+  providers: [StepperItemContainer, StepperItemController],
 })
-export class StepperItemComponent implements OnInit, OnDestroy {
+export class StepperItemComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly _sub = new Subscription()
 
   set subscription(sub: Subscription) {
@@ -29,79 +24,44 @@ export class StepperItemComponent implements OnInit, OnDestroy {
     return this._sub
   }
 
-  @Input() groupName!: string
-  @Input() group!: FormGroup
+  formGroupName!: string
+  @Input() set FGroupName(formGroupName: string) {
+    this.formGroupName = formGroupName
+  }
+
+  formGroup!: FormGroup
+  @Input() set FGroup(formGroup: FormGroup) {
+    this.formGroup = formGroup
+  }
+
   @Input() submitPipe!: UnaryFunction<any, any>
 
   @HostBinding('@changeStepAnimation')
   get getStepAnimation() {
-    return this.wrapperContainer.step === this.itemContainer.index
-      ? 'current'
-      : this.wrapperContainer.step > this.itemContainer.index
-      ? 'prev'
-      : 'next'
+    return this.itemController.calculateAnimationState()
   }
 
-  submit$ = new Subject<any>()
-
-  constructor(
-    readonly itemContainer: ItemContainer,
-    readonly wrapperContainer: WrapperContainer,
-    readonly elementRef: ElementRef<HTMLElement>
-  ) {}
-
-  initForm() {
-    if (!this.wrapperContainer.form) {
-      throw getStepperItemIsNotInStepperWrapperError()
-    }
-
-    if (!this.group && this.groupName) {
-      const formGroup = this.wrapperContainer.form.get(this.groupName)
-      if (!(formGroup instanceof FormGroup)) {
-        throw getFormGroupIsMissingInStepperWrapperFormGroupError(this.groupName)
-      }
-
-      this.itemContainer.form = formGroup
-      this.group = formGroup
-    } else if (this.group && this.groupName) {
-      this.wrapperContainer.form.addControl(this.groupName, this.group)
-      this.itemContainer.form = this.group
-    } else if (!this.group && !this.groupName) {
-      throw getInputsIsMissingInStepperItemError('group', 'groupName')
-    } else if (this.group && !this.groupName) {
-      throw getInputsIsMissingInStepperItemError('groupName')
-    }
-  }
+  constructor(readonly itemController: StepperItemController) {}
 
   ngOnInit() {
-    if (!this.submitPipe) {
-      throw getInputsIsMissingInStepperItemError('submitPipe')
-    }
+    this.formGroup = this.itemController.initFormGroup(this.formGroup, this.formGroupName)
 
-    this.initForm()
-
-    this.itemContainer.heightPx = this.elementRef.nativeElement.getBoundingClientRect().height
-
-    this.subscription = this.itemContainer.submit$
+    this.subscription = this.itemController
+      .getSubmit$(this.submitPipe)
       .pipe(
-        tap(() => this.group.updateValueAndValidity()),
-        filter(() => this.group.valid),
-        tap(() => {
-          this.group.disable()
-          this.wrapperContainer.loading = true
-        }),
-        this.submitPipe,
-        tap(() => {
-          this.wrapperContainer.loading = false
-          this.wrapperContainer.step = this.wrapperContainer.step + 1
-          this.group.enable()
-        }),
-        catchError((_) => {
-          this.group.enable()
+        catchError((error) => {
+          if (typeof error === 'string') {
+            this.itemController.openSnackBar(error)
+          }
+
           return of()
         })
       )
       .subscribe()
+  }
+
+  ngAfterViewInit() {
+    this.itemController.initHeight()
   }
 
   ngOnDestroy() {

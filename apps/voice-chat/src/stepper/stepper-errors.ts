@@ -2,8 +2,8 @@ export const getStepperItemIsNotInStepperWrapperError = () => {
   return Error('Stepper-item must be in a stepper-wrapper')
 }
 
-export const getStepperInputIsNotInStepperItemError = () => {
-  return Error('Stepper-input must be in a stepper-item')
+export const getStepperFieldIsNotInStepperItemError = () => {
+  return Error('Stepper-field must be in a stepper-item')
 }
 
 export const getFormGroupIsMissingInStepperWrapperFormGroupError = (formGroupName: string) => {
@@ -14,8 +14,8 @@ export const getInputsIsMissingInStepperItemError = (...inputs: string[]) => {
   return Error(`In stepper item is missing inputs: ${inputs.join(' ,')}`)
 }
 
-export const getInputsIsMissingInStepperInputError = (...inputs: string[]) => {
-  return Error(`In stepper input is missing inputs: ${inputs.join(' ,')}`)
+export const getInputsIsMissingInStepperFieldError = (...inputs: string[]) => {
+  return Error(`In stepper field is missing inputs: ${inputs.join(' ,')}`)
 }
 
 export const getInputsIsMissingInStepperWRapperError = (...inputs: string[]) => {

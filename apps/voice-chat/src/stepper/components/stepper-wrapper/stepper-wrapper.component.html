@@ -1,6 +1,6 @@
-<form [formGroup]="group">
-  <div class="steps" [style.height]="height">
+<form [formGroup]="formGroup">
+  <div class="steps" [style.height]="wrapperController.height$ | async">
     <ng-content></ng-content>
   </div>
-  <vc-stepper-btn (click)="onBtnClick()" [disabled]="false" [loading]="false"></vc-stepper-btn>
+  <vc-stepper-btn (click)="wrapperController.submit()" [loading]="wrapperController.loading$ | async"></vc-stepper-btn>
 </form>

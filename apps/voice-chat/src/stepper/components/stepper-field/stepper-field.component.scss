@@ -5,6 +5,21 @@
   width: 100%;
 }
 
+::ng-deep {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  .mat-form-field-underline {
+    bottom: 0 !important;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    top: auto !important;
+    bottom: 0 !important;
+  }
+}
+
 mat-form-field {
   width: 100%;
 }

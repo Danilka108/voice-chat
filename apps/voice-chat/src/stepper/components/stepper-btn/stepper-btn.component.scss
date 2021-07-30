@@ -1,24 +1,7 @@
 button {
   width: var(--steppers-item-width);
-  position: relative;
   font-size: 1rem;
   text-transform: uppercase;
-  line-height: 2.5;
-}
-
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.spinner {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  &::ng-deep circle {
-    stroke: var(--reverse-text-color);
-  }
+  line-height: 2.5rem;
+  margin-top: 0.4rem;
 }

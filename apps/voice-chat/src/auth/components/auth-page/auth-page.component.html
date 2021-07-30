@@ -24,12 +24,8 @@
   <vc-auth-btn-loader (click)="increateStep()" [loading]="isBtnLoading" [disabled]="isBtnDisabled"></vc-auth-btn-loader>
 </form> -->
 
-<vc-stepper-wrapper [group]="formGroup">
-  <vc-stepper-item [submitPipe]="pipe" groupName="step-a">
-    <vc-stepper-input type="text" label="field a" controlName="field-a"></vc-stepper-input>
-  </vc-stepper-item>
-  <vc-stepper-item [submitPipe]="pipe" groupName="step-a">
-    <vc-stepper-input type="text" label="field a" controlName="field-a"></vc-stepper-input>
-    <vc-stepper-input type="text" label="field a" controlName="field-b"></vc-stepper-input>
+<vc-stepper-wrapper [FGroup]="formGroup">
+  <vc-stepper-item [submitPipe]="pipe" FGroupName="step-a">
+    <vc-stepper-field type="text" label="field a" FControlName="field-a"></vc-stepper-field>
   </vc-stepper-item>
 </vc-stepper-wrapper>

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormBuilder, FormGroup, RequiredValidator, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { BaseComponent } from '../../../core/shared/base-component'
-import { map, tap } from 'rxjs/operators'
+import { delay, map, tap } from 'rxjs/operators'
 import { AuthSteps } from '../../shared/enums'
 import { HttpService } from '../../shared/http.service'
 import { pipe } from 'rxjs'
@@ -24,7 +24,10 @@ export class AuthPageComponent extends BaseComponent {
   // step = 0
   // stepsMaxWith = 0
 
-  pipe = pipe(tap(() => console.log('sdfsdf')))
+  pipe = pipe(
+    delay(10000),
+    tap(() => console.log('sdfsdf'))
+  )
 
   constructor(
     readonly fb: FormBuilder,

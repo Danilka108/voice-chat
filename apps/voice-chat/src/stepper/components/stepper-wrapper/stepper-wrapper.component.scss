@@ -10,6 +10,6 @@ form {
 }
 
 .steps {
-  width: calc(var(--steppers-item-width) * 3);
+  width: var(--steppers-item-width);
   position: relative;
 }
