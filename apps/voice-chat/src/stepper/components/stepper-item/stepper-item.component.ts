@@ -11,7 +11,7 @@ import { catchError } from 'rxjs/operators'
   selector: 'vc-stepper-item',
   templateUrl: './stepper-item.component.html',
   styleUrls: ['./stepper-item.component.scss'],
-  animations: [changeStepAnimation(200)],
+  animations: [changeStepAnimation()],
   providers: [StepperItemContainer, StepperItemController],
 })
 export class StepperItemComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -35,6 +35,10 @@ export class StepperItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @Input() submitPipe!: UnaryFunction<any, any>
+
+  @Input() set fixHeight(isFixHeight: boolean) {
+    this.itemController.fixHeight = isFixHeight
+  }
 
   @HostBinding('@changeStepAnimation')
   get getStepAnimation() {

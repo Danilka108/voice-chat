@@ -1,6 +1,15 @@
-import { animate, state, style, transition, trigger } from '@angular/animations'
+import {
+  animate,
+  AnimationMetadataType,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations'
 
-export const changeStepAnimation = (durationMs: number) =>
+const CHANGE_STEP_ANIM_DURATION_MS = 200
+
+export const changeStepAnimation = () =>
   trigger('changeStepAnimation', [
     state(
       'next',
@@ -24,6 +33,136 @@ export const changeStepAnimation = (durationMs: number) =>
         opacity: '0%',
       })
     ),
-    transition('current <=> next', animate(`${durationMs}ms`)),
-    transition('prev <=> current', animate(`${durationMs}ms`)),
+    transition(
+      'current => next',
+      animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
+        type: AnimationMetadataType.Keyframes,
+        steps: [
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0,
+            styles: {
+              transform: 'translate(-50%, -50%)',
+              opacity: '100%',
+              display: 'flex',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0.5,
+            styles: {
+              transform: 'translate(0, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 1,
+            styles: {
+              transform: 'translate(50%, -50%)',
+              opacity: '0%',
+            },
+          },
+        ],
+      })
+    ),
+    transition(
+      'next => current',
+      animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
+        type: AnimationMetadataType.Keyframes,
+        steps: [
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0,
+            styles: {
+              transform: 'translate(50%, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0.5,
+            styles: {
+              transform: 'translate(0, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 1,
+            styles: {
+              transform: 'translate(-50%, -50%)',
+              opacity: '100%',
+              display: 'flex',
+            },
+          },
+        ],
+      })
+    ),
+    transition(
+      'current => prev',
+      animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
+        type: AnimationMetadataType.Keyframes,
+        steps: [
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0,
+            styles: {
+              transform: 'translate(-50%, -50%)',
+              opacity: '100%',
+              display: 'flex',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0.5,
+            styles: {
+              transform: 'translate(-100%, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 1,
+            styles: {
+              transform: 'translate(-150%, -50%)',
+              opacity: '0%',
+            },
+          },
+        ],
+      })
+    ),
+    transition(
+      'prev => current',
+      animate(CHANGE_STEP_ANIM_DURATION_MS, {
+        type: AnimationMetadataType.Keyframes,
+        steps: [
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0,
+            styles: {
+              transform: 'translate(-150%, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 0.5,
+            styles: {
+              transform: 'translate(-100%, -50%)',
+              opacity: '0%',
+            },
+          },
+          {
+            type: AnimationMetadataType.Style,
+            offset: 1,
+            styles: {
+              transform: 'translate(-50%, -50%)',
+              opacity: '100%',
+              display: 'flex',
+            },
+          },
+        ],
+      })
+    ),
   ])

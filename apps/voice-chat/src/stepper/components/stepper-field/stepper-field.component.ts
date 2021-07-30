@@ -11,7 +11,7 @@ import { StepperFieldController } from '../../controllers/stepper-field.controll
 })
 export class StepperFieldComponent implements OnInit {
   @Input() type!: string
-  @Input() label!: string
+  @Input() placeholder!: string
 
   formControlName!: string
   @Input() set FControlName(controlName: string) {

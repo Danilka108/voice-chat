@@ -12,4 +12,5 @@ form {
 .steps {
   width: var(--steppers-item-width);
   position: relative;
+  transition: height 250ms;
 }

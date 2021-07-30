@@ -14,8 +14,8 @@ const NOT_CREATED_USER_HTTP_CODE = 406
   templateUrl: './auth-page.component.html',
   styleUrls: ['./auth-page.component.scss'],
 })
-export class AuthPageComponent extends BaseComponent {
-  formGroup!: FormGroup
+export class AuthPageComponent {
+  formGroup = this.fb.group({})
 
   // isTelLoading = false
   // isCodeLoading = false
@@ -24,24 +24,7 @@ export class AuthPageComponent extends BaseComponent {
   // step = 0
   // stepsMaxWith = 0
 
-  pipe = pipe(
-    delay(10000),
-    tap(() => console.log('sdfsdf'))
-  )
-
-  constructor(
-    readonly fb: FormBuilder,
-    readonly matSnackBar: MatSnackBar,
-    readonly httpService: HttpService
-  ) {
-    super()
-    this.formGroup = fb.group({
-      'step-a': fb.group({
-        'field-a': fb.control(null, Validators.required),
-        'field-b': fb.control(null),
-      }),
-    })
-  }
+  constructor(readonly fb: FormBuilder) {}
 
   // increateStep() {
   //   this.changeStep(this.step + 1)

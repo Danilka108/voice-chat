@@ -22,6 +22,10 @@ export class StepperItemController {
 
   private formGroup: FormGroup | null = null
 
+  set fixHeight(isFixHeight: boolean) {
+    this.itemContainer.fixHeight = isFixHeight
+  }
+
   initFormGroup(formGroup: FormGroup, formGroupName: string) {
     let _formGroup = formGroup
 

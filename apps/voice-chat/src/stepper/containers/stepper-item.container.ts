@@ -16,7 +16,9 @@ import { Subject } from 'rxjs'
 })
 export class StepperItemContainer {
   form?: FormGroup
+
   heightPx?: number
+  fixHeight = false
 
   submit$ = new Subject<void>()
 

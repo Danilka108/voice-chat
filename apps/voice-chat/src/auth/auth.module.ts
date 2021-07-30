@@ -8,9 +8,7 @@ import { routes } from './auth.routes'
 import { AuthPageComponent } from './components/auth-page/auth-page.component'
 import { HttpService } from './shared/http.service'
 import { telCodesFactory, TEL_CODES } from './factories/tel-codes.factory'
-import { AuthBtnLoaderComponent } from './components/auth-btn-loader/auth-btn-loader.component'
 import { authCodeLenFactory, AUTH_CODE_LEN } from './factories/auth-code-len.factory'
-import { AuthBtnComponent } from './components/auth-btn/auth-btn.component'
 import { AuthEmojiComponent } from './components/auth-emoji/auth-emoji.component'
 import { AuthHeaderComponent } from './components/auth-header/auth-header.component'
 import { AuthSubHeaderComponent } from './components/auth-sub-header/auth-sub-header.component'
@@ -19,17 +17,11 @@ import { AuthStepNameComponent } from './components/auth-step-name/auth-step-nam
 import { AuthStepCodeComponent } from './components/auth-step-code/auth-step-code.component'
 import { AuthStepTelComponent } from './components/auth-step-tel/auth-step-tel.component'
 import { AuthStepWelcomeComponent } from './components/auth-step-welcome/auth-step-welcome.component'
-import { AuthInputComponent } from './components/auth-input/auth-input.component'
-import { AuthFormComponent } from './components/auth-form/auth-form.component'
-import { AuthContainerComponent } from './components/auth-container/auth-container.component'
 import { StepperModule } from '../stepper'
 
 @NgModule({
   declarations: [
     AuthPageComponent,
-    AuthFormComponent,
-    AuthBtnLoaderComponent,
-    AuthBtnComponent,
     AuthEmojiComponent,
     AuthHeaderComponent,
     AuthSubHeaderComponent,
@@ -38,8 +30,6 @@ import { StepperModule } from '../stepper'
     AuthStepCodeComponent,
     AuthStepTelComponent,
     AuthStepWelcomeComponent,
-    AuthInputComponent,
-    AuthContainerComponent,
   ],
   imports: [
     HttpClientModule,

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { FormBuilder, FormGroup } from '@angular/forms'
-import { AuthSteps } from '../../shared/enums'
+import { Component } from '@angular/core'
+import { FormBuilder } from '@angular/forms'
+import { pipe } from 'rxjs'
 
 @Component({
   selector: 'vc-auth-step-welcome',
@@ -8,22 +8,8 @@ import { AuthSteps } from '../../shared/enums'
   styleUrls: ['./auth-step-welcome.component.scss'],
 })
 export class AuthStepWelcomeComponent {
-  @Input() currentStep!: number
-  @Output() stepChange = new EventEmitter<AuthSteps>()
+  formGroup = this.fb.group({})
+  submitPipe = pipe()
 
-  formGroup!: FormGroup
-  step!: number
-
-  constructor(fb: FormBuilder) {
-    this.step = AuthSteps.Welcome
-    this.formGroup = fb.group({})
-  }
-
-  onSignUp() {
-    this.stepChange.emit(AuthSteps.Name)
-  }
-
-  onSignIn() {
-    this.stepChange.emit(AuthSteps.Tel)
-  }
+  constructor(readonly fb: FormBuilder) {}
 }

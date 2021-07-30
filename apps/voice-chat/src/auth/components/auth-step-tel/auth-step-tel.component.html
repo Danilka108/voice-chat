@@ -1,4 +1,4 @@
-<vc-auth-form FGroupName="tel-step" [FGroup]="formGroup" (submitEvent)="onSubmit()" [currentStep]="currentStep" [step]="step">
+<!-- <vc-auth-form FGroupName="tel-step" [FGroup]="formGroup" (submitEvent)="onSubmit()" [currentStep]="currentStep" [step]="step">
   <vc-auth-emoji>☎️</vc-auth-emoji>
 
   <vc-auth-header>Enter your phone number</vc-auth-header>
@@ -11,4 +11,9 @@
     [loading]="loading"
     [disabled]="isBtnDisabled"
   ></vc-auth-btn-loader>
-</vc-auth-form>
+</vc-auth-form> -->
+<vc-stepper-item [FGroup]="formGroup" FGroupName="tel-step" [submitPipe]="submitPipe">
+  <vc-auth-header>Phone number</vc-auth-header>
+  <vc-stepper-field type="text" FControlName="tel"></vc-stepper-field>
+  <vc-stepper-field type="text" FControlName="code"></vc-stepper-field>
+</vc-stepper-item>
