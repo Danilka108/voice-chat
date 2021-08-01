@@ -1,0 +1,13 @@
+<vc-step [formGroup]="formGroup">
+  <h2 vcAuthHeader>Phone Number</h2>
+  <p vcAuthCaption>Please config your country code and enter your mobile phone number.</p>
+
+  <div class="tel">
+    <mat-form-field class="tel-code">
+      <input matInput formControlName="tel-code" type="text">
+    </mat-form-field>
+    <mat-form-field class="tel-number">
+      <input matInput formControlName="tel-number" type="text">
+    </mat-form-field>
+  </div>
+</vc-step>

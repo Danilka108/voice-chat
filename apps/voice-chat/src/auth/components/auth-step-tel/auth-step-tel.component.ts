@@ -2,6 +2,10 @@ import { Component, EventEmitter, Inject, Input, Output } from '@angular/core'
 import { FormBuilder, FormGroup } from '@angular/forms'
 import { pipe } from 'rxjs'
 import { TEL_CODES } from '../../factories/tel-codes.factory'
+import {
+  PhoneNumberCode,
+  PHONE_NUMBER_CODES_OF_COUNTIRES,
+} from '../../providers/country-codes.provider'
 import { AuthSteps } from '../../shared/enums'
 
 @Component({
@@ -11,13 +15,21 @@ import { AuthSteps } from '../../shared/enums'
 })
 export class AuthStepTelComponent {
   formGroup = this.fb.group({
-    tel: this.fb.control(null),
-    code: this.fb.control(null),
+    'tel-code': this.fb.control(null),
   })
 
   submitPipe = pipe()
 
-  constructor(readonly fb: FormBuilder) {}
+  selectedTelCode = '+1'
+
+  constructor(
+    @Inject(PHONE_NUMBER_CODES_OF_COUNTIRES) readonly phoneNumberCodes: PhoneNumberCode[],
+    readonly fb: FormBuilder
+  ) {}
+
+  onSubmit(event: any) {
+    console.log('sdf', event)
+  }
 
   // @Input() loading!: boolean
   // @Input() currentStep!: number

@@ -1,0 +1,13 @@
+:host {
+  --step-width: 14rem;
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  flex-direction: column;
+}
+
+.steps {
+  width: var(--step-width);
+  position: relative;
+  transition: height 250ms;
+}

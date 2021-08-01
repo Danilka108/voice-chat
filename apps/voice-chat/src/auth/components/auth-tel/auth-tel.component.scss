@@ -1,0 +1,30 @@
+.tel {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.tel-code {
+  width: 19%;
+  text-align: center;
+}
+
+.tel-number {
+  width: 79%;
+}
+
+::ng-deep {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  .mat-form-field-underline {
+    bottom: 0 !important;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    top: auto !important;
+    bottom: 0 !important;
+  }
+}

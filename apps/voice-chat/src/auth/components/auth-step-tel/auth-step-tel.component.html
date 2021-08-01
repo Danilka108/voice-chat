@@ -12,8 +12,24 @@
     [disabled]="isBtnDisabled"
   ></vc-auth-btn-loader>
 </vc-auth-form> -->
-<vc-stepper-item [FGroup]="formGroup" FGroupName="tel-step" [submitPipe]="submitPipe">
-  <vc-auth-header>Phone number</vc-auth-header>
-  <vc-stepper-field type="text" FControlName="tel"></vc-stepper-field>
-  <vc-stepper-field type="text" FControlName="code"></vc-stepper-field>
-</vc-stepper-item>
+
+
+<!-- <vc-stepper-item [FGroup]="formGroup" FGroupName="tel-step" [submitPipe]="submitPipe">
+  <h2 vcAuthHeader>Your Phone Number</h2>
+  <p vcAuthCaption>Please config your country code and enter your mobile phone number.</p>
+
+  <vc-stepper-field-select FControlName="tel-code">
+      <mat-option>None</mat-option>
+      <mat-option  *ngFor="let telCode of phoneNumberCodes" [value]="telCode.countryCode">
+        {{telCode.name}}
+      </mat-option>
+  </vc-stepper-field-select>
+  <div class="tel">
+    <vc-stepper-field class="tel-code" FControlName="tel-code" type="number"></vc-stepper-field>
+    <vc-stepper-field class="tel-number" FControlName="tel-number" type="number"></vc-stepper-field>
+  </div>
+</vc-stepper-item> -->
+
+<vc-step [formGroup]="formGroup" (ngSubmit)="onSubmit($event)">
+  <input type="text" formControlName="tel-code">
+</vc-step>

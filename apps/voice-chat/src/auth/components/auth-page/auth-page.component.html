@@ -1,36 +1,4 @@
-<!-- <form [formGroup]="formGroup">
-  <div class="step">
-    <vc-auth-container>
-      <vc-auth-step-welcome
-        [currentStep]="step"
-        (stepChange)="changeStep($event)"
-      ></vc-auth-step-welcome>
-      <vc-auth-step-name
-        [currentStep]="step"
-        (stepChange)="changeStep($event)"
-      ></vc-auth-step-name>
-      <vc-auth-step-tel
-        [loading]="isTelLoading"
-        [currentStep]="step"
-        (stepChange)="changeStep($event)"
-      ></vc-auth-step-tel>
-      <vc-auth-step-code
-        [loading]="isCodeLoading"
-        [currentStep]="step"
-        (stepChange)="changeStep($event)"
-      ></vc-auth-step-code>
-    </vc-auth-container>
-  </div>
-  <vc-auth-btn-loader (click)="increateStep()" [loading]="isBtnLoading" [disabled]="isBtnDisabled"></vc-auth-btn-loader>
-</form> -->
-
-<!-- <vc-stepper-wrapper [FGroup]="formGroup">
-  <vc-stepper-item [submitPipe]="pipe" FGroupName="step-a">
-    <vc-stepper-field type="text" label="field a" FControlName="field-a"></vc-stepper-field>
-  </vc-stepper-item>
-</vc-stepper-wrapper> -->
-
-<vc-stepper-wrapper [FGroup]="formGroup">
-  <vc-auth-step-welcome></vc-auth-step-welcome>
-  <vc-auth-step-tel></vc-auth-step-tel>
-</vc-stepper-wrapper>
+<vc-stepper [formGroup]="formGroup">
+  <vc-auth-welcome></vc-auth-welcome>
+  <vc-auth-tel></vc-auth-tel>
+</vc-stepper>

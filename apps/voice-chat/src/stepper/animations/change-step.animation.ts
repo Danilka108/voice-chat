@@ -7,19 +7,25 @@ import {
   trigger,
 } from '@angular/animations'
 
+export enum ChangeStepAnimStates {
+  Next = 'CHANGE_STEP_ANIM_STATE_NEXT',
+  Prev = 'CHANGE_STEP_ANIM_STATE_PREV',
+  Current = 'CHANGE_STEP_ANIM_STATE_CURRENT',
+}
+
 const CHANGE_STEP_ANIM_DURATION_MS = 200
 
 export const changeStepAnimation = () =>
   trigger('changeStepAnimation', [
     state(
-      'next',
+      ChangeStepAnimStates.Next,
       style({
         transform: 'translate(50%, -50%)',
         opacity: '0%',
       })
     ),
     state(
-      'current',
+      ChangeStepAnimStates.Current,
       style({
         transform: 'translate(-50%, -50%)',
         opacity: '100%',
@@ -27,14 +33,14 @@ export const changeStepAnimation = () =>
       })
     ),
     state(
-      'prev',
+      ChangeStepAnimStates.Prev,
       style({
         transform: 'translate(-150%, -50%)',
         opacity: '0%',
       })
     ),
     transition(
-      'current => next',
+      `${ChangeStepAnimStates.Current} => ${ChangeStepAnimStates.Next}`,
       animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
         type: AnimationMetadataType.Keyframes,
         steps: [
@@ -67,7 +73,7 @@ export const changeStepAnimation = () =>
       })
     ),
     transition(
-      'next => current',
+      `${ChangeStepAnimStates.Next} => ${ChangeStepAnimStates.Current}`,
       animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
         type: AnimationMetadataType.Keyframes,
         steps: [
@@ -100,7 +106,7 @@ export const changeStepAnimation = () =>
       })
     ),
     transition(
-      'current => prev',
+      `${ChangeStepAnimStates.Current} => ${ChangeStepAnimStates.Prev}`,
       animate(`${CHANGE_STEP_ANIM_DURATION_MS}ms`, {
         type: AnimationMetadataType.Keyframes,
         steps: [
@@ -133,7 +139,7 @@ export const changeStepAnimation = () =>
       })
     ),
     transition(
-      'prev => current',
+      `${ChangeStepAnimStates.Prev} => ${ChangeStepAnimStates.Current}`,
       animate(CHANGE_STEP_ANIM_DURATION_MS, {
         type: AnimationMetadataType.Keyframes,
         steps: [
