@@ -8,6 +8,7 @@ export class AuthTextDirective {
   @HostBinding('style') styles = {
     margin: '0',
     marginBottom: '0.8rem',
+    userSelect: 'none',
   }
   @HostBinding('class.mat-body') matBody = true
 }

@@ -10,6 +10,7 @@ export class AuthHeaderDirective {
     margin: '0',
     width: '100%',
     marginTop: '0.8rem',
+    userSelect: 'none',
   }
   @HostBinding('class.mat-h2') matH2 = true
 }

@@ -4,8 +4,8 @@ import { AuthCodeReq, AuthCodeRes, AuthTelReq, AuthTelRes } from '@voice-chat/ap
 import { DeviceDetectorService } from 'ngx-device-detector'
 import { Observable, of } from 'rxjs'
 import { catchError, map, tap } from 'rxjs/operators'
-import { HttpRes, HttpResError, HttpResOK } from '../../core/types/http-res.type'
-import { environment } from '../../environments/environment'
+import { HttpRes, HttpResError, HttpResOK } from '../core/types/http-res.type'
+import { environment } from '../environments/environment'
 
 @Injectable()
 export class HttpService {

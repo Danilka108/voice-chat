@@ -12,8 +12,8 @@ import {
   Output,
 } from '@angular/core'
 import { FormGroup, FormGroupDirective, FormGroupName } from '@angular/forms'
-import { Subscription } from 'rxjs'
-import { tap } from 'rxjs/operators'
+import { from, Observable, of, Subscription } from 'rxjs'
+import { catchError, switchMap, tap } from 'rxjs/operators'
 import {
   changeStepAnimation,
   ChangeStepAnimStates,
@@ -38,7 +38,9 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
     return this._sub
   }
 
-  @Input() fixedHeight!: boolean
+  @Input() fixedHeight = false
+
+  @Input() next$ = of<void>(undefined)
 
   @Output() submit = new EventEmitter()
 
@@ -76,6 +78,21 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.subscription = this.stepContext.submit$
+      .pipe(
+        switchMap(() => {
+          this.stepperContext.loading$.next(true)
+          this.submit.emit()
+          return this.next$
+        }),
+        catchError(() => of(undefined)),
+        tap(() => {
+          this.stepperContext.loading$.next(false)
+          this.stepperContext.activeStepIndex += 1
+        })
+      )
+      .subscribe()
+
     this.subscription = this.stepperContext.loading$
       .pipe(
         tap((isLoading) => {
@@ -87,15 +104,6 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
             return formGroup.disable()
 
           formGroup.enable()
-        })
-      )
-      .subscribe()
-
-    this.subscription = this.stepContext.submit$
-      .pipe(
-        tap(() => {
-          this.stepperContext.activeStepIndex += 1
-          this.submit.emit()
         })
       )
       .subscribe()

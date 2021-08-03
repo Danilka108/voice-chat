@@ -1,12 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core'
 import { FormBuilder, FormGroup } from '@angular/forms'
 import { pipe } from 'rxjs'
-import { TEL_CODES } from '../../factories/tel-codes.factory'
-import {
-  PhoneNumberCode,
-  PHONE_NUMBER_CODES_OF_COUNTIRES,
-} from '../../providers/country-codes.provider'
-import { AuthSteps } from '../../shared/enums'
 
 @Component({
   selector: 'vc-auth-step-tel',
@@ -14,22 +8,22 @@ import { AuthSteps } from '../../shared/enums'
   styleUrls: ['./auth-step-tel.component.scss'],
 })
 export class AuthStepTelComponent {
-  formGroup = this.fb.group({
-    'tel-code': this.fb.control(null),
-  })
+  // formGroup = this.fb.group({
+  //   'tel-code': this.fb.control(null),
+  // })
 
   submitPipe = pipe()
 
   selectedTelCode = '+1'
 
-  constructor(
-    @Inject(PHONE_NUMBER_CODES_OF_COUNTIRES) readonly phoneNumberCodes: PhoneNumberCode[],
-    readonly fb: FormBuilder
-  ) {}
+  // constructor(
+  //   @Inject(PHONE_NUMBER_CODES_OF_COUNTIRES) readonly phoneNumberCodes: PhoneNumberCode[],
+  //   readonly fb: FormBuilder
+  // ) {}
 
-  onSubmit(event: any) {
-    console.log('sdf', event)
-  }
+  // onSubmit(event: any) {
+  //   console.log('sdf', event)
+  // }
 
   // @Input() loading!: boolean
   // @Input() currentStep!: number

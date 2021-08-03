@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { BaseComponent } from '../../../core/shared/base-component'
 import { delay, map, tap } from 'rxjs/operators'
 import { AuthSteps } from '../../shared/enums'
-import { HttpService } from '../../shared/http.service'
 import { pipe } from 'rxjs'
 
 const NOT_CREATED_USER_HTTP_CODE = 406
