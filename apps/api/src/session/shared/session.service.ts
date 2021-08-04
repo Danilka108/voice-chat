@@ -1,44 +1,26 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { CacheSession } from '../interfaces/session.interface'
 import { CacheSessionService } from './cache-session.service'
-import { isCacheSession } from '../validators/is-cache-session.validator'
+import { isCacheSession } from '../guards/is-cache-session'
 import { TokenService } from '../../token/token.service'
+import { UserAuthorizationData, UserIdentificationData } from '@voice-chat/api-interfaces'
 
 @Injectable()
 export class SessionService {
   constructor(
-    private readonly cacheSessionService: CacheSessionService,
+    private readonly cacheService: CacheSessionService,
     private readonly tokenService: TokenService
   ) {}
 
   async create(
     accessToken: string,
-    userMarkers: {
-      browser: string
-      os: string
-      ip: string
-    }
-  ): Promise<{
-    accessToken: string
-    refreshToken: string
-  }>
-  async create(
-    tel: string,
-    cacheSessionKey: CacheSession
-  ): Promise<{
-    accessToken: string
-    refreshToken: string
-  }>
+    userIdentificationData: UserIdentificationData
+  ): Promise<UserAuthorizationData>
+  async create(tel: string, cacheSessionKey: CacheSession): Promise<UserAuthorizationData>
   async create(
     arg1: string,
-    arg2:
-      | CacheSession
-      | {
-          browser: string
-          os: string
-          ip: string
-        }
-  ) {
+    arg2: UserIdentificationData | CacheSession
+  ): Promise<UserAuthorizationData> {
     if (isCacheSession(arg2)) {
       const tel = arg1
       const cacheSessionKey = arg2
@@ -49,7 +31,7 @@ export class SessionService {
       })
       const refreshToken = this.tokenService.createRefreshToken()
 
-      await this.cacheSessionService.set(cacheSessionKey, refreshToken)
+      await this.cacheService.set(cacheSessionKey, refreshToken)
 
       return {
         accessToken,
@@ -58,7 +40,7 @@ export class SessionService {
     }
 
     const oldAccessToken = arg1
-    const userMarkers = arg2
+    const userIdentificationData = arg2
 
     const decoded = this.tokenService.decodeAccessToken(oldAccessToken)
 
@@ -67,12 +49,7 @@ export class SessionService {
     const accessToken = this.tokenService.createAccessToken(decoded)
     const refreshToken = this.tokenService.createRefreshToken()
 
-    const cacheSessionKey = {
-      id: decoded.userID,
-      ...userMarkers,
-    }
-
-    await this.cacheSessionService.set(cacheSessionKey, refreshToken)
+    await this.cacheService.set({ id: decoded.userID, userIdentificationData }, refreshToken)
 
     return {
       accessToken,
@@ -81,29 +58,41 @@ export class SessionService {
   }
 
   async verify(
-    accessToken: string,
-    refreshToken: string,
-    browser: string,
-    os: string,
-    ip: string
+    userAuthorizationData: UserAuthorizationData,
+    userIdentificationData: UserIdentificationData
   ) {
-    const decodedAccessToken = this.tokenService.decodeAccessToken(accessToken)
+    const decoded = this.tokenService.decodeAccessToken(userAuthorizationData.accessToken)
 
-    if (decodedAccessToken === null) {
+    if (!decoded) {
       throw new ForbiddenException('Failed verify session.')
     }
 
-    const cacheSessionKey = {
-      id: decodedAccessToken.userID,
-      os,
-      browser,
-      ip,
-    }
+    const cacheValue = await this.cacheService.get({
+      id: decoded.userID,
+      userIdentificationData,
+    })
 
-    const cacheSessionValue = await this.cacheSessionService.get(cacheSessionKey)
-
-    if (cacheSessionValue === null || cacheSessionValue.refreshToken !== refreshToken) {
+    if (
+      cacheValue === null ||
+      cacheValue.refreshToken !== userAuthorizationData.refreshToken
+    ) {
       throw new ForbiddenException('Failed verify session.')
     }
+  }
+
+  async delete(
+    userAuthorizationData: UserAuthorizationData,
+    userIdentificationData: UserIdentificationData
+  ) {
+    const decoded = this.tokenService.decodeAccessToken(userAuthorizationData.accessToken)
+
+    if (!decoded) {
+      throw new ForbiddenException('Failed verify session.')
+    }
+
+    await this.cacheService.del({
+      id: decoded.userID,
+      userIdentificationData,
+    })
   }
 }

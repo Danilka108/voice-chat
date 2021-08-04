@@ -1,17 +1,19 @@
-import { BadRequestException, Inject } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Inject } from '@nestjs/common'
 import { Twilio } from 'twilio'
+import { CodeConfig, CODE_CONFIG } from '../config/code.config'
+import { NotificationsConfig, NOTIFICATIONS_CONFIG } from '../config/notifications.config'
 import { INotificationsService } from './notifications.interface'
 
 export class NotificationsService implements INotificationsService {
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(NOTIFICATIONS_CONFIG) private readonly notificationsConfig: NotificationsConfig,
+    @Inject(CODE_CONFIG) private readonly codeConfig: CodeConfig,
     @Inject('twilio') private readonly twilio: Twilio
   ) {}
 
   async sendAuthNotification(to: string, code: number): Promise<boolean> {
-    const from = this.configService.get<string>('notifications.apiFrom') || ''
-    const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
+    const from = this.notificationsConfig.apiFrom
+    const codeTTL = this.codeConfig.ttl
 
     try {
       const message = await this.twilio.messages.create({

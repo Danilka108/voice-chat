@@ -1,28 +1,28 @@
-import { Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Inject, Module } from '@nestjs/common'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module'
 import { User } from './user/user.entity'
 import { ConfigModule } from './config/config.module'
+import { DatabaseConfig, DATABASE_CONFIG } from './config/database.config'
 
 @Module({
   imports: [
-    ConfigModule.register(),
+    ConfigModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          type: configService.get('database.type'),
-          host: configService.get('database.host'),
-          port: configService.get('database.port'),
-          username: configService.get('database.username'),
-          password: configService.get('database.password'),
-          database: configService.get('database.database'),
-          synchronize: true,
+      useFactory: async (databaseConfig: DatabaseConfig) => {
+        return <TypeOrmModuleOptions>{
+          type: databaseConfig.type,
+          host: databaseConfig.host,
+          port: databaseConfig.port,
+          username: databaseConfig.username,
+          password: databaseConfig.password,
+          database: databaseConfig.database,
+          synchronize: databaseConfig.synchronize,
           entities: [User],
-        } as TypeOrmModuleOptions
+        }
       },
-      inject: [ConfigService],
+      inject: [DATABASE_CONFIG],
     }),
     AuthModule,
   ],

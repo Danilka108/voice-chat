@@ -1,1 +1,2 @@
-export * from './lib/auth'
+export * from './lib/auth.interfaces'
+export * from './lib/auth.guards'

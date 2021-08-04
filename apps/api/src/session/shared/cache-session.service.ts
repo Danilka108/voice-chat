@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { isCacheSessionValue } from '../validators/is-cache-session-value'
+import { Inject, Injectable } from '@nestjs/common'
 import { CacheSession, CacheSessionValue } from '../interfaces/session.interface'
 import { CacheManager } from '../../cache/cache-manager'
+import { SessionConfig, SESSION_CONFIG } from '../../config/session.config'
+import { isCacheSessionValue } from '../guards/is-cache-session-value'
 
 @Injectable()
 export class CacheSessionService {
   constructor(
     private readonly cacheManager: CacheManager,
-    private readonly configService: ConfigService
+    @Inject(SESSION_CONFIG) private readonly config: SessionConfig
   ) {}
 
   private createKey(data: CacheSession) {
@@ -23,7 +23,7 @@ export class CacheSessionService {
     const cacheKey = this.createKey(key)
     const cacheValue = this.createValue({ refreshToken })
 
-    const sessionTTL = this.configService.get<number>('auth.session.ttl') || 0
+    const sessionTTL = this.config.ttl
 
     await this.cacheManager.set(cacheKey, cacheValue, 'EX', sessionTTL)
   }

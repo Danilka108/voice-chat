@@ -1,18 +1,18 @@
-import { ForbiddenException, Injectable, NotAcceptableException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { ForbiddenException, Inject, Injectable, NotAcceptableException } from '@nestjs/common'
 import { CacheCode } from '../interfaces/code.interface'
 import { CacheCodeService } from '../shared/cache-code.service'
 import * as crypto from 'crypto'
+import { CodeConfig, CODE_CONFIG } from '../../config/code.config'
 
 @Injectable()
 export class CodeService {
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(CODE_CONFIG) private readonly config: CodeConfig,
     private readonly cacheCodeService: CacheCodeService
   ) {}
 
   private generateCode(): number {
-    const codeLen = this.configService.get<number>('auth.code.len') || 0
+    const codeLen = this.config.len
 
     let min = '1'
     let max = ''
@@ -34,8 +34,7 @@ export class CodeService {
     const code = this.generateCode()
     const cacheCodeValue = await this.cacheCodeService.get(cacheCodeKey)
 
-    const periodOfBanOfRefreshCode =
-      this.configService.get<number>('auth.code.periodOfBanOfRefresh') || 0
+    const periodOfBanOfRefreshCode = this.config.periodOfBanOfRefresh
 
     if (
       cacheCodeValue !== null &&

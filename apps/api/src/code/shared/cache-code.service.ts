@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Inject, Injectable } from '@nestjs/common'
 import { CacheManager } from '../../cache/cache-manager'
+import { CodeConfig, CODE_CONFIG } from '../../config/code.config'
 import { CacheCode, CacheCodeValue } from '../interfaces/code.interface'
-import { isCacheCodeValue } from '../validators/is-cache-code-value'
+import { isCacheCodeValue } from '../guards/is-cache-code-value'
 
 @Injectable()
 export class CacheCodeService {
   constructor(
     private readonly cacheManager: CacheManager,
-    private readonly configService: ConfigService
+    @Inject(CODE_CONFIG) private readonly config: CodeConfig
   ) {}
 
   private createKey(data: CacheCode) {
@@ -29,7 +29,7 @@ export class CacheCodeService {
       createdAt: Date.now(),
     })
 
-    const codeTTL = this.configService.get<number>('auth.code.ttl') || 0
+    const codeTTL = this.config.ttl
 
     await this.cacheManager.set(cacheKey, cacheValue, 'EX', codeTTL)
   }

@@ -1,48 +1,72 @@
-import { Body, Controller, HttpCode, HttpStatus, Ip, Post } from '@nestjs/common'
-import { AuthCodeRes, AuthRefreshSessionRes } from '@voice-chat/api-interfaces'
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import {
+  AuthCodeStepRes,
+  AuthInitProfileStepRes,
+  AuthRefreshSessionRes,
+  AuthTelStepRes,
+  isUserAuthorizationData,
+} from '@voice-chat/api-interfaces'
 import { AuthService } from './auth.service'
-import { AuthCodeDto } from './dto/auth-code.dto'
+import { AuthCodeStepDto } from './dto/auth-code-step.dto'
+import { AuthInitProfileStepDto } from './dto/auth-init-profile-step.dto'
 import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
-import { AuthTelDto } from './dto/auth-tel.dto'
+import { AuthTelStepDto } from './dto/auth-tel-step.dto'
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Post('tel')
-  async tel(@Body() authTelDto: AuthTelDto, @Ip() ip: string) {
-    await this.authService.tel(authTelDto, ip)
+  @Post('tel-step')
+  async telStep(@Body() authTelStepDto: AuthTelStepDto): Promise<AuthTelStepRes> {
+    await this.authService.telStep(authTelStepDto)
 
     return {
-      statusCode: 200,
+      statusCode: HttpStatus.OK,
       message: 'A code will be sent to the entered phone number. Use this code for sign in.',
     }
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('code')
-  async code(@Body() authCodeDto: AuthCodeDto, @Ip() ip: string): Promise<AuthCodeRes> {
-    const result = await this.authService.code(authCodeDto, ip)
+  @Post('code-step')
+  async codeStep(@Body() authCodeStepDto: AuthCodeStepDto): Promise<AuthCodeStepRes> {
+    const result = await this.authService.codeStep(authCodeStepDto)
+
+    const message = isUserAuthorizationData(result)
+      ? 'Successful sign in.'
+      : 'You need to init profile for sign in.'
 
     return {
-      statusCode: 200,
+      statusCode: HttpStatus.OK,
+      message,
+      data: result,
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('init-profile-step')
+  async initProfileStep(
+    @Body() authInitProfileStepDto: AuthInitProfileStepDto
+  ): Promise<AuthInitProfileStepRes> {
+    const result = await this.authService.initProfileStep(authInitProfileStepDto)
+
+    return {
+      statusCode: HttpStatus.OK,
       message: 'Successful sign in.',
       data: result,
     }
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('refresh-token')
+  @Post('refresh-session')
   async refreshToken(
-    @Body() authRefreshTokenDto: AuthRefreshSessionDto,
-    @Ip() ip: string
+    @Body() authRefreshSessionDto: AuthRefreshSessionDto
   ): Promise<AuthRefreshSessionRes> {
-    const result = await this.authService.refreshSession(authRefreshTokenDto, ip)
+    const result = await this.authService.refreshSession(authRefreshSessionDto)
 
     return {
       statusCode: 200,
-      message: 'Successful refresh token.',
+      message: 'Successful refresh session.',
       data: result,
     }
   }

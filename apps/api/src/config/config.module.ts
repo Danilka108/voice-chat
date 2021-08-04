@@ -1,37 +1,30 @@
-import { DynamicModule, Module } from '@nestjs/common'
-import { ConfigModule as NativeConfigModule } from '@nestjs/config'
-import { environment } from '../environments/environment'
-import {
-  appConfig,
-  authConfig,
-  cacheConfig,
-  databaseConfig,
-  httpConfig,
-  notificationsConfig,
-  tokenConfig,
-} from './configs'
+import { Module } from '@nestjs/common'
+import { appConfigProvider } from './app.config'
+import { cacheConfigProvider } from './cache.config'
+import { codeConfigProvider } from './code.config'
+import { databaseConfigProvider } from './database.config'
+import { notificationsConfigProvider } from './notifications.config'
+import { sessionConfigProvider } from './session.config'
+import { tokenConfigProvider } from './token.config'
 
-@Module({})
-export class ConfigModule {
-  static register(): DynamicModule {
-    const nativeConfigModule = NativeConfigModule.forRoot({
-      envFilePath: environment.envFileName,
-      isGlobal: true,
-      load: [
-        appConfig,
-        authConfig,
-        cacheConfig,
-        databaseConfig,
-        httpConfig,
-        notificationsConfig,
-        tokenConfig,
-      ],
-    })
-
-    return {
-      module: ConfigModule,
-      exports: [nativeConfigModule],
-      imports: [nativeConfigModule],
-    }
-  }
-}
+@Module({
+  providers: [
+    appConfigProvider,
+    cacheConfigProvider,
+    codeConfigProvider,
+    databaseConfigProvider,
+    notificationsConfigProvider,
+    sessionConfigProvider,
+    tokenConfigProvider,
+  ],
+  exports: [
+    appConfigProvider,
+    cacheConfigProvider,
+    codeConfigProvider,
+    databaseConfigProvider,
+    notificationsConfigProvider,
+    sessionConfigProvider,
+    tokenConfigProvider,
+  ],
+})
+export class ConfigModule {}

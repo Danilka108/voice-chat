@@ -1,11 +1,13 @@
-import { BadRequestException, Injectable, NotAcceptableException } from '@nestjs/common'
-import { AuthCodeDto } from './dto/auth-code.dto'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
-import { AuthTelDto } from './dto/auth-tel.dto'
 import { SessionService } from '../session/shared/session.service'
 import { NotificationsService } from '../notifications/notifications.service'
 import { UserDBService } from '../user/user-db.service'
 import { CodeService } from '../code/shared/code.service'
+import { AuthTelStepDto } from './dto/auth-tel-step.dto'
+import { AuthCodeStepDto } from './dto/auth-code-step.dto'
+import { InitProfileService } from '../init-profile/shared/init-profile.service'
+import { AuthInitProfileStepDto } from './dto/auth-init-profile-step.dto'
 
 @Injectable()
 export class AuthService {
@@ -13,78 +15,92 @@ export class AuthService {
     private readonly codeService: CodeService,
     private readonly sessionService: SessionService,
     private readonly notificationsService: NotificationsService,
-    private readonly userDBService: UserDBService
+    private readonly userDBService: UserDBService,
+    private readonly initProfileService: InitProfileService
   ) {}
 
-  async tel({ tel, browser, os }: AuthTelDto, ip: string): Promise<void> {
-    const cacheCodeKey = {
+  async telStep({ tel, userIdentificationData }: AuthTelStepDto) {
+    const code = await this.codeService.create({
       tel,
-      browser,
-      os,
-      ip,
-    }
-
-    const code = await this.codeService.create(cacheCodeKey)
-
-    const isMessageSended = await this.notificationsService.sendAuthNotification(tel, code)
-
-    if (!isMessageSended) {
-      await this.codeService.delete(cacheCodeKey)
-      throw new BadRequestException('Failed to send auth message')
-    }
-  }
-
-  async code(
-    { tel, code, browser, os, name }: AuthCodeDto,
-    ip: string
-  ): Promise<{
-    accessToken: string
-    refreshToken: string
-  }> {
-    const cacheCodeKey = {
-      tel,
-      browser,
-      os,
-      ip,
-    }
-
-    await this.codeService.verify(cacheCodeKey, code)
-
-    let user = await this.userDBService.findByTel(tel)
-
-    if (user === null && name.trim().length === 0) {
-      throw new NotAcceptableException('A name is required to create a user.')
-    }
-
-    if (user === null) {
-      user = await this.userDBService.create(name, tel)
-    }
-
-    await this.codeService.delete(cacheCodeKey)
-
-    const cacheSessionKey = {
-      id: user.id,
-      os,
-      browser,
-      ip,
-    }
-
-    const result = await this.sessionService.create(tel, cacheSessionKey)
-
-    return result
-  }
-
-  async refreshSession(
-    { refreshToken, accessToken, browser, os }: AuthRefreshSessionDto,
-    ip: string
-  ) {
-    await this.sessionService.verify(accessToken, refreshToken, browser, os, ip)
-
-    const newSession = await this.sessionService.create(accessToken, {
-      browser,
-      ip,
-      os,
+      userIdentificationData,
     })
+
+    const isNotificationSent = await this.notificationsService.sendAuthNotification(tel, code)
+
+    if (!isNotificationSent) {
+      await this.codeService.delete({
+        tel,
+        userIdentificationData,
+      })
+      throw new BadRequestException('Failed to send auth notification')
+    }
+  }
+
+  async codeStep({ tel, code, userIdentificationData }: AuthCodeStepDto) {
+    await this.codeService.verify(
+      {
+        tel,
+        userIdentificationData,
+      },
+      code
+    )
+
+    await this.codeService.delete({
+      tel,
+      userIdentificationData,
+    })
+
+    const user = await this.userDBService.findByTel(tel)
+
+    if (!user) {
+      const initProfileToken = await this.initProfileService.create({
+        tel,
+        userIdentificationData,
+      })
+
+      return {
+        initProfileToken,
+      }
+    }
+
+    const session = await this.sessionService.create(tel, {
+      id: user.id,
+      userIdentificationData,
+    })
+
+    return session
+  }
+
+  async initProfileStep({
+    tel,
+    name,
+    initProfileToken,
+    userIdentificationData,
+  }: AuthInitProfileStepDto) {
+    await this.initProfileService.verify({ tel, userIdentificationData }, initProfileToken)
+
+    const newUser = await this.userDBService.create(name, tel)
+
+    const session = await this.sessionService.create(tel, {
+      id: newUser.id,
+      userIdentificationData,
+    })
+
+    return session
+  }
+
+  async refreshSession({
+    userAuthorizationData,
+    userIdentificationData,
+  }: AuthRefreshSessionDto) {
+    await this.sessionService.verify(userAuthorizationData, userIdentificationData)
+
+    await this.sessionService.delete(userAuthorizationData, userIdentificationData)
+
+    const newSession = await this.sessionService.create(
+      userAuthorizationData.accessToken,
+      userIdentificationData
+    )
 
     return newSession
   }

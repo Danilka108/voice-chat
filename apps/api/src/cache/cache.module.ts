@@ -1,17 +1,19 @@
 import { Logger, Module } from '@nestjs/common'
 import { CacheManager } from './cache-manager'
-import { ConfigService } from '@nestjs/config'
 import IORedis = require('ioredis')
+import { ConfigModule } from '../config/config.module'
+import { CacheConfig, CACHE_CONFIG } from '../config/cache.config'
 
 @Module({
   providers: [
     CacheManager,
+    ConfigModule,
     {
-      inject: [ConfigService],
+      inject: [CACHE_CONFIG],
       provide: CacheManager,
-      useFactory: (configService: ConfigService) => {
-        const port = configService.get<number>('cache.port') || 6379
-        const host = configService.get<string>('cache.host') || 'localhost'
+      useFactory: (cacheConfig: CacheConfig) => {
+        const port = Number(cacheConfig.port)
+        const host = cacheConfig.host
 
         const client = new IORedis({
           port,

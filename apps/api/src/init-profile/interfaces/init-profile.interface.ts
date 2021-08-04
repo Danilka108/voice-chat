@@ -1,10 +1,10 @@
 import { UserIdentificationData } from '@voice-chat/api-interfaces'
 
-export interface CacheSession {
-  id: number
+export interface CacheInitProfile {
+  tel: string
   userIdentificationData: UserIdentificationData
 }
 
-export interface CacheSessionValue {
-  refreshToken: string
+export interface CacheInitProfileValue {
+  initProfileToken: string
 }

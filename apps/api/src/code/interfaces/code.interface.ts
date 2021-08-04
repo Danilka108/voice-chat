@@ -1,8 +1,8 @@
+import { UserIdentificationData } from '@voice-chat/api-interfaces'
+
 export interface CacheCode {
   tel: string
-  browser: string
-  os: string
-  ip: string
+  userIdentificationData: UserIdentificationData
 }
 
 export interface CacheCodeValue {

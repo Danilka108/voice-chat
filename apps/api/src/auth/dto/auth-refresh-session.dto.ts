@@ -1,16 +1,14 @@
-import { AuthRefreshSessionReq } from '@voice-chat/api-interfaces'
-import { IsString } from 'class-validator'
+import {
+  AuthRefreshSessionReq,
+  UserAuthorizationData,
+  UserIdentificationData,
+} from '@voice-chat/api-interfaces'
+import { ValidateNested } from 'class-validator'
 
 export class AuthRefreshSessionDto implements AuthRefreshSessionReq {
-  @IsString()
-  accessToken!: string
+  @ValidateNested()
+  userAuthorizationData!: UserAuthorizationData
 
-  @IsString()
-  refreshToken!: string
-
-  @IsString()
-  os!: string
-
-  @IsString()
-  browser!: string
+  @ValidateNested()
+  userIdentificationData!: UserIdentificationData
 }
