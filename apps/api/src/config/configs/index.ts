@@ -1,7 +1,0 @@
-export { appConfig } from './app.config'
-export { authConfig } from './auth.config'
-export { cacheConfig } from './cache.config'
-export { databaseConfig } from './database.config'
-export { httpConfig } from './http.config'
-export { notificationsConfig } from './notifications.config'
-export { tokenConfig } from './token.config'

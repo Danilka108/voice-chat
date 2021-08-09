@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { FormGroup } from '@angular/forms'
 import { BehaviorSubject, Subject } from 'rxjs'
 import { StepContext } from './step-context'
 
@@ -20,6 +21,8 @@ export class StepperContext {
   get activeStep() {
     return this.steps[this.activeStepIndex]
   }
+
+  form: FormGroup | null = null
 
   readonly steps: StepContext[] = []
 }

@@ -12,8 +12,8 @@ import {
   Output,
 } from '@angular/core'
 import { FormGroup, FormGroupDirective, FormGroupName } from '@angular/forms'
-import { from, Observable, of, Subscription } from 'rxjs'
-import { catchError, switchMap, tap } from 'rxjs/operators'
+import { of, pipe, Subscription } from 'rxjs'
+import { catchError, map, tap } from 'rxjs/operators'
 import {
   changeStepAnimation,
   ChangeStepAnimStates,
@@ -40,9 +40,10 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() fixedHeight = false
 
-  @Input() next$ = of<void>(undefined)
+  @Input() nextPipe = pipe(map(() => true))
 
   @Output() submit = new EventEmitter()
+  @Output() selected = new EventEmitter()
 
   @HostBinding('@changeStepAnimation') get animState() {
     return this.stepperContext.activeStepIndex === this.stepContext.index
@@ -64,46 +65,49 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
     event.preventDefault()
     event.stopPropagation()
     this.stepContext.submit$.next()
-    return false
   }
 
   getFormGroup() {
+    let formGroup: FormGroup | null = null
+
     if (this.formGroupName && this.formGroupName.control instanceof FormGroup) {
-      return this.formGroupName.control
+      formGroup = this.formGroupName.control
     } else if (this.formGroupDirective) {
-      return this.formGroupDirective.form
-    } else {
-      return null
+      formGroup = this.formGroupDirective.form
     }
+
+    if (this.stepperContext.form === formGroup) formGroup = null
+
+    return formGroup
   }
 
   ngOnInit() {
     this.subscription = this.stepContext.submit$
       .pipe(
-        switchMap(() => {
+        tap(() => {
           this.stepperContext.loading$.next(true)
           this.submit.emit()
-          return this.next$
         }),
-        catchError(() => of(undefined)),
-        tap(() => {
+        this.nextPipe,
+        catchError(() => of(false)),
+        tap((isNext) => {
+          const formGroup = this.getFormGroup()
+
+          if (isNext) this.stepperContext.activeStepIndex += 1
+
+          if (isNext && formGroup) formGroup.disable()
+
           this.stepperContext.loading$.next(false)
-          this.stepperContext.activeStepIndex += 1
         })
       )
       .subscribe()
 
-    this.subscription = this.stepperContext.loading$
+    this.subscription = this.stepperContext.activeStepIndex$
       .pipe(
-        tap((isLoading) => {
-          const formGroup = this.getFormGroup()
-
-          if (!formGroup) return
-
-          if (isLoading || this.animState === ChangeStepAnimStates.Prev)
-            return formGroup.disable()
-
-          formGroup.enable()
+        tap((activeStepIndex) => {
+          if (activeStepIndex === this.stepContext.index) {
+            this.selected.emit()
+          }
         })
       )
       .subscribe()

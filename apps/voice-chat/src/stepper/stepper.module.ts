@@ -5,10 +5,26 @@ import { MaterialModule } from '../material/material.module'
 import { StepComponent } from './components/step/step.component'
 import { StepperNextComponent } from './components/stepper-next/stepper-next.component'
 import { StepperComponent } from './components/stepper/stepper.component'
+import { StepperWrapperDirective } from './directives/stepper-wrapper.directive'
+import { StepperPrevDirective } from './directives/stepper-prev.directive'
+import { StepperNextDirective } from './directives/stepper-next.directive'
 
 @NgModule({
   imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule],
-  declarations: [StepperComponent, StepComponent, StepperNextComponent],
-  exports: [StepperComponent, StepComponent],
+  declarations: [
+    StepperComponent,
+    StepComponent,
+    StepperNextComponent,
+    StepperWrapperDirective,
+    StepperPrevDirective,
+    StepperNextDirective,
+  ],
+  exports: [
+    StepperComponent,
+    StepComponent,
+    StepperNextDirective,
+    StepperPrevDirective,
+    StepperWrapperDirective,
+  ],
 })
 export class StepperModule {}

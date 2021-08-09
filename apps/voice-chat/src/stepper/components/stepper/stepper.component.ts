@@ -6,11 +6,14 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
 } from '@angular/core'
+import { FormGroup, FormGroupDirective, FormGroupName } from '@angular/forms'
 import { merge, Subject, Subscription } from 'rxjs'
 import { filter, map, tap } from 'rxjs/operators'
 import { StepperContext } from '../../stepper-context'
+import { WrapperContext } from '../../wrapper-context'
 
 @Component({
   selector: 'vc-stepper',
@@ -44,8 +47,11 @@ export class StepperComponent implements OnInit, AfterViewInit, OnDestroy {
   )
 
   constructor(
+    @Optional() readonly wrapperContext: WrapperContext | null,
     readonly stepperContext: StepperContext,
-    readonly changeDetector: ChangeDetectorRef
+    readonly changeDetector: ChangeDetectorRef,
+    @Optional() readonly formGroupName: FormGroupName | null,
+    @Optional() readonly formGroupDirective: FormGroupDirective | null
   ) {}
 
   getMaxHeightAmongItems() {
@@ -55,14 +61,34 @@ export class StepperComponent implements OnInit, AfterViewInit, OnDestroy {
       if (item.heightPx) heights.push(item.heightPx)
     }
 
-    return heights.length ? `${Math.ceil(heights.sort()[0])}px` : 'auto'
+    return heights.length ? `${Math.ceil(Math.max(...heights))}px` : 'auto'
   }
 
-  onNextStep() {
-    this.stepperContext.activeStep?.submit$.next()
+  initFormGroup() {
+    let formGroup: FormGroup | null = null
+
+    if (this.formGroupName && this.formGroupName.control instanceof FormGroup) {
+      formGroup = this.formGroupName.control
+    } else if (this.formGroupDirective) {
+      formGroup = this.formGroupDirective.form
+    }
+
+    this.stepperContext.form = formGroup
   }
 
   ngOnInit() {
+    this.initFormGroup()
+
+    if (this.wrapperContext) {
+      this.subscription = this.wrapperContext.prevStep$
+        .pipe(tap(() => (this.stepperContext.activeStepIndex += 1)))
+        .subscribe()
+
+      this.subscription = this.wrapperContext.nextStep$
+        .pipe(tap(() => this.stepperContext.activeStep?.submit$.next()))
+        .subscribe()
+    }
+
     this.subscription = this.stepperContext.loading$
       .pipe(tap((loading) => this.loading.emit(loading)))
       .subscribe()

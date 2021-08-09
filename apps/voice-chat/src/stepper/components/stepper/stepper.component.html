@@ -1,4 +1,4 @@
 <div [style.height]="height$ | async" class="steps">
   <ng-content></ng-content>
 </div>
-<vc-stepper-next (click)="onNextStep()" [loading]="stepperContext.loading$ | async"></vc-stepper-next>
+<ng-content select="[nextStepBtn]"></ng-content>
