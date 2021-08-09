@@ -1,0 +1,11 @@
+<vc-step [formGroup]="formGroup" [nextPipe]="nextPipe" (selected)="onSelected()">
+  <h2 vcAuthHeader>{{getTel()}}</h2>
+  <p vcAuthCaption>We've sent an auth code to your phone. Please enter it below.</p>
+
+  <mat-form-field class="code-form-field">
+    <mat-label>Code</mat-label>
+    <input matInput #codeInputRef (input)="onCodeInput()" class="code-input input" formControlName="code" type="number">
+  </mat-form-field>
+
+  <vc-auth-error [active]="hasErrors()">Code must be entered</vc-auth-error>
+</vc-step>

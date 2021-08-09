@@ -1,0 +1,14 @@
+vc-stepper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.next-step-btn {
+  width: 100%;
+  font-size: 1rem;
+  text-transform: uppercase;
+  line-height: 2.5rem;
+  margin-top: 0.4rem;
+}

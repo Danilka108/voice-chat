@@ -1,0 +1,22 @@
+:host {
+  width: 100%;
+}
+
+.error {
+  margin: 0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
+  width: 100%;
+
+  p {
+    opacity: 0;
+    transform: translateY(-50%);
+    margin: 0 !important;
+    transition: 150ms;
+  }
+
+  &.active p {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

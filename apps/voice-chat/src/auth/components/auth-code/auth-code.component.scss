@@ -1,0 +1,13 @@
+.code-form-field {
+  width: 100%;
+}
+
+.code-input::-webkit-outer-spin-button,
+.code-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.code-input[type='number'] {
+  -moz-appearance: textfield;
+}

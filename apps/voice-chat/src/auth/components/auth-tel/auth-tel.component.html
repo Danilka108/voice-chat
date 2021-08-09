@@ -1,0 +1,25 @@
+<vc-step [formGroup]="formGroup" (selected)="onSelected()" [nextPipe]="nextPipe">
+  <h2 vcAuthHeader>Phone Number</h2>
+  <p vcAuthCaption>Please config your country code and enter your mobile phone number.</p>
+
+  <mat-form-field class="select">
+    <mat-select [disabled]="formGroup.disabled" [(value)]="selectedCountryIndex">
+      <mat-option [value]="-1" class="option-country">Contry Code</mat-option>
+      <div class="option" *ngFor="let country of countries; index as i">
+        <mat-option class="option-country" [value]="i">{{country.name}}</mat-option>
+        <span class="option-code mat-caption">{{'+' + country.telCode}}</span>
+      </div>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="tel">
+    <mat-form-field class="tel-code">
+      <input matInput class="input" (input)="onTelCodeInput()" formControlName="tel-code" type="tel">
+    </mat-form-field>
+    <mat-form-field class="tel-number">
+      <input matInput class="input" #telNumberRef  (input)="onTelNumberInput()" formControlName="tel-number" type="tel">
+    </mat-form-field>
+  </div>
+  
+  <vc-auth-error [active]="hasErrors()">Invalid phone number</vc-auth-error>
+</vc-step>
