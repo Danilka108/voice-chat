@@ -81,7 +81,7 @@ export class StepperComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.wrapperContext) {
       this.subscription = this.wrapperContext.prevStep$
-        .pipe(tap(() => (this.stepperContext.activeStepIndex += 1)))
+        .pipe(tap(() => (this.stepperContext.activeStepIndex -= 1)))
         .subscribe()
 
       this.subscription = this.wrapperContext.nextStep$

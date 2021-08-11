@@ -85,7 +85,7 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription = this.stepContext.submit$
       .pipe(
         tap(() => {
-          this.stepperContext.loading$.next(true)
+          this.stepperContext.loading = true
           this.submit.emit()
         }),
         this.nextPipe,
@@ -97,7 +97,7 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
 
           if (isNext && formGroup) formGroup.disable()
 
-          this.stepperContext.loading$.next(false)
+          this.stepperContext.loading = false
         })
       )
       .subscribe()
