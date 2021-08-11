@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MaterialModule } from '../material/material.module'
 import { StepComponent } from './components/step/step.component'
-import { StepperNextComponent } from './components/stepper-next/stepper-next.component'
 import { StepperComponent } from './components/stepper/stepper.component'
 import { StepperWrapperDirective } from './directives/stepper-wrapper.directive'
 import { StepperPrevDirective } from './directives/stepper-prev.directive'
@@ -14,7 +13,6 @@ import { StepperNextDirective } from './directives/stepper-next.directive'
   declarations: [
     StepperComponent,
     StepComponent,
-    StepperNextComponent,
     StepperWrapperDirective,
     StepperPrevDirective,
     StepperNextDirective,
