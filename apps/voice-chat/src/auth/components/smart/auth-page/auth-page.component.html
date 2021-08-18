@@ -1,0 +1,8 @@
+<div vcStepperWrapper>  
+  <vc-stepper [formGroup]="formGroup">
+    <vc-auth-welcome></vc-auth-welcome>
+    <vc-auth-tel></vc-auth-tel>
+    <vc-auth-code (next)="onCodeStepNext($event)"></vc-auth-code>
+    <button vcStepperNext mat-flat-button [disabled]="isLoading" color="primary" class="next-step-btn">Next</button>
+  </vc-stepper>
+</div>

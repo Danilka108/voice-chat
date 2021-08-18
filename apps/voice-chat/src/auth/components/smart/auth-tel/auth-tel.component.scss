@@ -1,0 +1,53 @@
+@use '~@angular/material' as mat;
+@import '../../../../theme/theme.scss';
+
+.tel {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tel-code {
+  width: calc(22% - 0.25rem);
+  text-align: center;
+}
+
+.tel-number {
+  position: relative;
+  width: calc(78% - 0.25rem);
+}
+
+.select {
+  width: 100%;
+}
+
+.select::ng-deep .mat-select-value-text {
+  margin-bottom: 2px;
+  @include mat.typography-level($fontConfig, 'body-1');
+  user-select: none;
+}
+
+.option {
+  position: relative;
+  overflow: hidden;
+}
+
+.option-country::ng-deep {
+  .mat-option-text {
+    @include mat.typography-level($fontConfig, 'body-1');
+    pointer-events: none;
+    user-select: none;
+    padding-right: 2rem !important;
+  }
+}
+
+.option-code {
+  @include mat.typography-level($fontConfig, 'caption');
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  z-index: 10000;
+}

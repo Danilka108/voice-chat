@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MaterialModule } from '../material/material.module'
-import { StepComponent } from './components/step/step.component'
-import { StepperComponent } from './components/stepper/stepper.component'
-import { StepperWrapperDirective } from './directives/stepper-wrapper.directive'
-import { StepperPrevDirective } from './directives/stepper-prev.directive'
-import { StepperNextDirective } from './directives/stepper-next.directive'
+import { MaterialModule } from '../material'
+import { StepComponent, StepperComponent } from './components'
+import {
+  StepperNextDirective,
+  StepperPrevDirective,
+  StepperWrapperDirective,
+} from './directives'
 
 @NgModule({
   imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule],

@@ -1,0 +1,25 @@
+version: '3.5'
+
+services:
+  db:
+    container_name: vc_db
+    image: 'postgres:alpine'
+    environment:
+      POSTGRES_USER: '${DB_USER}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_NAME}'
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    restart: unless-stopped
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+  cache:
+    container_name: vc_cache
+    restart: unless-stopped
+    image: 'redis:alpine'
+    ports:
+      - '${CACHE_PORT}:${CACHE_PORT}'
+
+volumes:
+  postgres:

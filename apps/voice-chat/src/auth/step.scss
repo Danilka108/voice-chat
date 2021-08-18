@@ -1,4 +1,9 @@
-@import "./vars.scss";
+@use '~@angular/material' as mat;
+@import '../theme/theme.scss';
+
+input {
+  @include mat.typography-level($fontConfig, 'body-1');
+}
 
 mat-form-field::ng-deep {
   .mat-form-field-wrapper {
@@ -13,8 +18,4 @@ mat-form-field::ng-deep {
     top: auto !important;
     bottom: 0 !important;
   }
-}
-
-.input {
-  font: $base-font;
 }

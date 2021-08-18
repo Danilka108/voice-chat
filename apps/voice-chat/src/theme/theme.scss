@@ -235,6 +235,9 @@ $altTheme: (
   background: $mat-dark-theme-background,
 );
 
+
+// Theme Init
+@include mat.all-component-themes($theme);
 body {
   --text-color: #{$dark-text};
   --primary-text-color: #{$dark-primary-text};
@@ -250,9 +253,6 @@ body {
   --reverse-dividers-color: #{$light-dividers};
   --reverse-focused-color: #{$light-focused};
 }
-
-// Theme Init
-@include mat.all-component-themes($theme);
 
 .dark-theme {
   @include mat.all-component-themes($altTheme);

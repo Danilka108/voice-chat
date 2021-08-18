@@ -12,8 +12,8 @@ import {
   Output,
 } from '@angular/core'
 import { FormGroup, FormGroupDirective, FormGroupName } from '@angular/forms'
-import { of, pipe, Subscription } from 'rxjs'
-import { catchError, map, tap } from 'rxjs/operators'
+import { of, Subscription, pipe, Observable, merge } from 'rxjs'
+import { tap, map, catchError, filter } from 'rxjs/operators'
 import {
   changeStepAnimation,
   ChangeStepAnimStates,
@@ -30,7 +30,6 @@ import { StepperContext } from '../../stepper-context'
 })
 export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
   _sub = new Subscription()
-
   set subscription(sub: Subscription) {
     this._sub.add(sub)
   }
@@ -39,8 +38,9 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @Input() fixedHeight = false
-
+  @Input() hide = false
   @Input() nextPipe = pipe(map(() => true))
+  @Input() submit$: Observable<void> = of()
 
   @Output() submit = new EventEmitter()
   @Output() selected = new EventEmitter()
@@ -82,7 +82,7 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.stepContext.submit$
+    this.subscription = merge(this.stepContext.submit$, this.submit$)
       .pipe(
         tap(() => {
           this.stepperContext.loading = true
@@ -90,24 +90,22 @@ export class StepComponent implements OnInit, AfterViewInit, OnDestroy {
         }),
         this.nextPipe,
         catchError(() => of(false)),
-        tap((isNext) => {
+        filter((isNext) => isNext),
+        tap(() => {
+          this.stepperContext.activeStepIndex += 1
+
           const formGroup = this.getFormGroup()
-
-          if (isNext) this.stepperContext.activeStepIndex += 1
-
-          if (isNext && formGroup) formGroup.disable()
-
-          this.stepperContext.loading = false
+          if (formGroup) formGroup.disable()
         })
       )
       .subscribe()
 
     this.subscription = this.stepperContext.activeStepIndex$
       .pipe(
-        tap((activeStepIndex) => {
-          if (activeStepIndex === this.stepContext.index) {
-            this.selected.emit()
-          }
+        filter((activeStepIndex) => activeStepIndex === this.stepContext.index),
+        tap(() => {
+          this.selected.emit()
+          if (this.hide) this.stepperContext.activeStepIndex += 1
         })
       )
       .subscribe()

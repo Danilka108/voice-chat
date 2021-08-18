@@ -3,18 +3,19 @@ import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
-import { MaterialModule } from '../material/material.module'
+import { MaterialModule } from '../material'
 import { routes } from './auth.routes'
-import { AuthPageComponent } from './components/auth-page/auth-page.component'
 import { StepperModule } from '../stepper'
-import { AuthHeaderDirective } from './directives/auth-header.directive'
-import { AuthTextDirective } from './directives/auth-text.directive'
-import { AuthCaptionDirective } from './directives/auth-caption.directive'
-import { AuthWelcomeComponent } from './components/auth-welcome/auth-welcome.component'
-import { AuthTelComponent } from './components/auth-tel/auth-tel.component'
-import { HttpService } from './http.service'
-import { AuthCodeComponent } from './components/auth-code/auth-code.component'
-import { AuthErrorComponent } from './components/auth-error/auth-error.component'
+import { AuthHeaderDirective, AuthCaptionDirective, AuthTextDirective } from './directives'
+import {
+  AuthPageComponent,
+  AuthWelcomeComponent,
+  AuthCodeComponent,
+  AuthErrorComponent,
+  AuthTelComponent,
+  AuthInitProfileComponent,
+} from './components'
+import { InitProfileService, AuthApiService, CountriesService } from './shared'
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AuthErrorComponent } from './components/auth-error/auth-error.component
     AuthCaptionDirective,
     AuthCodeComponent,
     AuthErrorComponent,
+    AuthInitProfileComponent,
   ],
   imports: [
     HttpClientModule,
@@ -36,6 +38,6 @@ import { AuthErrorComponent } from './components/auth-error/auth-error.component
     FormsModule,
     StepperModule,
   ],
-  providers: [HttpService],
+  providers: [AuthApiService, CountriesService, InitProfileService],
 })
 export class AuthModule {}

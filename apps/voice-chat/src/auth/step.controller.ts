@@ -1,35 +1,34 @@
-import { Injectable } from '@angular/core'
-import { FormGroup, FormGroupDirective } from '@angular/forms'
-import { HttpRes } from '../common/types/http-res.type'
+import { FormGroupDirective, FormGroup } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { of, pipe, Observable, UnaryFunction } from 'rxjs'
+import { map, catchError } from 'rxjs/operators'
 
-@Injectable()
-export class StepController {
+export abstract class StepController {
+  abstract formGroup: FormGroup
+
   constructor(
     private readonly matSnackBar: MatSnackBar,
-    private readonly formGroupDirective: FormGroupDirective
-  ) {
-    this.parseRes = this.parseRes.bind(this)
+    private readonly parentFormGroupDirective: FormGroupDirective
+  ) {}
+
+  protected mapApiRes<T>(): UnaryFunction<Observable<T | null>, Observable<boolean>> {
+    return pipe(
+      map((res) => res !== null),
+      catchError((error) => {
+        this.matSnackBar.open(error, 'ok', {
+          duration: 2000,
+        })
+
+        return of(false)
+      })
+    )
   }
 
-  addFormGroup(controlName: string, formGroup: FormGroup) {
-    this.formGroupDirective.form.addControl(controlName, formGroup)
+  addFormGroupToParent(controlName: string) {
+    this.parentFormGroupDirective.form.addControl(controlName, this.formGroup)
   }
 
   getParentFormGroup() {
-    return this.formGroupDirective.form
-  }
-
-  parseRes<T>(res: HttpRes<T> | null) {
-    if (!res) return false
-
-    if (res.status === 'ERROR') {
-      this.matSnackBar.open(res.message, 'ok', {
-        duration: 2500,
-      })
-      return false
-    }
-
-    return true
+    return this.parentFormGroupDirective.form
   }
 }
