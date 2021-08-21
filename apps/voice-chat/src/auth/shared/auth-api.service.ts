@@ -5,30 +5,42 @@ import {
   AuthCodeStepRes,
   AuthTelStepReq,
   AuthTelStepRes,
+  AuthInitProfileStepReq,
+  AuthInitProfileStepRes,
   BaseRes,
 } from '@voice-chat/api-interfaces'
-import { UserIdentificationData } from '@voice-chat/user-interfaces'
+import {
+  UserIdentificationData,
+  UserProfileData,
+  UserInitProfileData,
+} from '@voice-chat/user-interfaces'
 import { HttpClient } from '@angular/common/http'
-import { environment } from '../environments/environment'
-import { catchError, map } from 'rxjs/operators'
-import { Observable, pipe, UnaryFunction } from 'rxjs'
+import { environment } from '../../environments/environment'
+import { catchError, map, tap } from 'rxjs/operators'
+import { Observable, pipe, UnaryFunction, throwError } from 'rxjs'
+import { LoadingService } from './loading.service'
 
 @Injectable()
 export class AuthApiService {
   constructor(
     private readonly deviceDetecorService: DeviceDetectorService,
-    private readonly httpClient: HttpClient
+    private readonly httpClient: HttpClient,
+    private readonly loadingService: LoadingService
   ) {}
 
-  private getResPipe<T>(): UnaryFunction<Observable<BaseRes<T>>, Observable<T>> {
+  private mapRes<T>(): UnaryFunction<Observable<BaseRes<T>>, Observable<T>> {
     return pipe(
       map(({ data }): T => data),
+      tap(() => (this.loadingService.loading = false)),
       catchError((error) => {
+        this.loadingService.loading = false
         const errorMessage = error.error.message
 
-        throw Error(
+        const newError = Error(
           errorMessage && typeof errorMessage === 'string' ? errorMessage : 'Unexpected Error'
         )
+
+        return throwError(newError)
       })
     )
   }
@@ -48,9 +60,11 @@ export class AuthApiService {
       userIdentificationData: this.getUserIdentificationData(),
     }
 
+    this.loadingService.loading = true
+
     return this.httpClient
       .post<AuthTelStepRes>(`${environment.apiPath}/auth/tel-step`, body)
-      .pipe(this.getResPipe())
+      .pipe(this.mapRes())
   }
 
   codeStep(tel: string, code: number) {
@@ -60,8 +74,29 @@ export class AuthApiService {
       userIdentificationData: this.getUserIdentificationData(),
     }
 
+    this.loadingService.loading = true
+
     return this.httpClient
       .post<AuthCodeStepRes>(`${environment.apiPath}/auth/code-step`, body)
-      .pipe(this.getResPipe())
+      .pipe(this.mapRes())
+  }
+
+  initProfileStep(
+    tel: string,
+    userProfileData: UserProfileData,
+    userInitProfileData: UserInitProfileData
+  ) {
+    const body: AuthInitProfileStepReq = {
+      tel,
+      userProfileData,
+      userInitProfileData,
+      userIdentificationData: this.getUserIdentificationData(),
+    }
+
+    this.loadingService.loading = true
+
+    return this.httpClient
+      .post<AuthInitProfileStepRes>(`${environment.apiPath}/auth/init-profile-step`, body)
+      .pipe(this.mapRes())
   }
 }

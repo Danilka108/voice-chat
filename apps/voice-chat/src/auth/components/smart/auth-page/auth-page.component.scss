@@ -12,3 +12,25 @@ vc-stepper {
   line-height: 2.5rem;
   margin-top: 0.4rem;
 }
+
+.prev-step-btn {
+  margin-top: 0.7rem;
+  margin-left: 0.6rem;
+  opacity: 0;
+  transform: translateX(20%);
+  transition: 200ms;
+
+  &.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.progress-bar {
+  opacity: 0;
+  transition: 100ms;
+
+  &.active {
+    opacity: 1;
+  }
+}

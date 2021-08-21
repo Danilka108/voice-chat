@@ -1,15 +1,23 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core'
-import { UserAuthorizationData } from '@voice-chat/user-interfaces'
-import { StepController } from '../../../step.controller'
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
-import { pipe, Observable, Subscription, asyncScheduler } from 'rxjs'
-import { tap, map, switchMap, observeOn } from 'rxjs/operators'
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  Inject,
+  ViewChild,
+  ElementRef,
+} from '@angular/core'
+import { Subscription } from 'rxjs'
+import { AuthInitProfileController } from './auth-init-profile.controller'
+import { AUTH_INIT_PROFILE_CONTROLS, AuthInitProfileControls } from './controls.provider'
+import { Steps } from '../../../steps.enum'
+import { UserConfig, USER_CONFIG } from '../../../../configs'
 
 @Component({
   selector: 'vc-auth-init-profile',
   templateUrl: './auth-init-profile.component.html',
   styleUrls: ['./auth-init-profile.component.scss', '../../../step.scss'],
-  providers: [StepController],
+  providers: [AuthInitProfileController],
 })
 export class AuthInitProfileComponent implements OnInit, OnDestroy {
   private _sub = new Subscription()
@@ -20,29 +28,22 @@ export class AuthInitProfileComponent implements OnInit, OnDestroy {
     return this._sub
   }
 
+  @ViewChild('nameInputRef') nameInputRef!: ElementRef<HTMLElement>
+
   @Input() hide!: boolean
 
-  @Output() next = new EventEmitter<UserAuthorizationData>()
+  constructor(
+    readonly controller: AuthInitProfileController,
+    @Inject(USER_CONFIG) readonly userConfig: UserConfig,
+    @Inject(AUTH_INIT_PROFILE_CONTROLS) readonly controls: typeof AuthInitProfileControls
+  ) {}
 
-  formGroup = this.fb.group({
-    name: this.fb.control(''),
-  })
-
-  nextPipe = pipe(
-    observeOn(asyncScheduler),
-    tap(() => this.formGroup.get('name')?.setErrors(null))
-  )
-
-  constructor(readonly stepController: StepController, readonly fb: FormBuilder) {}
-
-  onNameValueChange(_value: string) {}
+  onSelected() {
+    this.nameInputRef.nativeElement.focus()
+  }
 
   ngOnInit() {
-    this.subscription = (<Observable<string>>this.formGroup.get('name')?.valueChanges)
-      .pipe(map((value) => this.onNameValueChange(value)))
-      .subscribe()
-
-    this.stepController.addFormGroup('init-profile-step', this.formGroup)
+    this.controller.addFormGroupToParent(Steps.InitProfile)
   }
 
   ngOnDestroy() {

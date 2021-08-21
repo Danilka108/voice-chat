@@ -1,9 +1,0 @@
-:host {
-  --step-width: 14rem;
-}
-
-.steps {
-  width: var(--step-width);
-  position: relative;
-  transition: height 250ms;
-}

@@ -1,9 +1,16 @@
-<vc-step [formGroup]="conroller.formGroup" [nextPipe]="controller.nextPipe" [submit$]="controller.submit$" (selected)="onSelected()">
-  <h2 vcAuthHeader>{{this.controller.getTel()}}</h2>
+<form
+  vcStep
+  [formGroup]="controller.formGroup"
+  [submit$]="controller.submit$"
+  (ngSubmit)="controller.submit()"
+  (next)="controller.submit()"
+  (selected)="onSelected()"
+>
+  <h2 vcAuthHeader>{{ this.controller.getTel() }}</h2>
   <p vcAuthCaption>We've sent an auth code to your phone. Please enter it below.</p>
 
   <mat-form-field>
     <mat-label>Code</mat-label>
-    <input matInput #codeInputRef [formControlName]="controls.Code" type="number">
+    <input matInput #codeInputRef [formControlName]="controls.Code" type="number" />
   </mat-form-field>
-</vc-step>
+</form>

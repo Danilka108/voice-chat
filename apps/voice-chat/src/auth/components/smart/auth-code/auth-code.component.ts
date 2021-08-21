@@ -1,15 +1,8 @@
-import {
-  Component,
-  Output,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  Inject,
-  OnDestroy,
-} from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild, Inject, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { AuthCodeController } from './auth-code.controller'
 import { AUTH_CODE_CONTROLS, AuthCodeControls } from './controls.provider'
+import { Steps } from '../../../steps.enum'
 
 @Component({
   selector: 'vc-auth-code',
@@ -28,8 +21,6 @@ export class AuthCodeComponent implements OnInit, OnDestroy {
 
   @ViewChild('codeInputRef') codeInputRef!: ElementRef<HTMLInputElement>
 
-  @Output() next = this.controller.next
-
   constructor(
     readonly controller: AuthCodeController,
     @Inject(AUTH_CODE_CONTROLS) readonly controls: typeof AuthCodeControls
@@ -41,6 +32,8 @@ export class AuthCodeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.controller.codeChanges$.subscribe()
+
+    this.controller.addFormGroupToParent(Steps.Code)
   }
 
   ngOnDestroy() {

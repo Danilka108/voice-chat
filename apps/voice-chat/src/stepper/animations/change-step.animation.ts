@@ -15,13 +15,14 @@ export enum ChangeStepAnimStates {
 
 const CHANGE_STEP_ANIM_DURATION = '200ms'
 
-export const changeStepAnimation = () =>
+export const changeStepAnim = () =>
   trigger('changeStepAnimation', [
     state(
       ChangeStepAnimStates.Next,
       style({
         opacity: '0%',
         left: '100%',
+        pointerEvents: 'none',
       })
     ),
     state(
@@ -29,6 +30,7 @@ export const changeStepAnimation = () =>
       style({
         opacity: '100%',
         left: '0',
+        pointerEvents: 'auto',
       })
     ),
     state(
@@ -36,6 +38,7 @@ export const changeStepAnimation = () =>
       style({
         opacity: '0%',
         left: '-100%',
+        pointerEvents: 'none',
       })
     ),
     transition(

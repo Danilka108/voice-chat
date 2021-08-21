@@ -1,9 +1,13 @@
 import { Injectable, Inject } from '@angular/core'
-import { Country, COUNTRIES } from '../providers/countries.provider'
+import { Country, COUNTRIES } from '../providers'
 
 @Injectable()
 export class CountriesService {
   constructor(@Inject(COUNTRIES) readonly countries: Country[]) {}
+
+  trackBy(_: number, item: Country) {
+    return item.telCode
+  }
 
   getDefaultCountry() {
     return this.getCountryByKey('name', 'United States')
@@ -22,6 +26,6 @@ export class CountriesService {
   }
 
   getIndexOfCountryByKey<T extends keyof Country>(key: T, value: Country[T]) {
-    return this.countries.findIndex((country) => country[key] === value)
+    return this.countries.findIndex((country) => country[key] === value) || -1
   }
 }

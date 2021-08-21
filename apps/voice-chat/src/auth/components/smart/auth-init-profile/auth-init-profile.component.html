@@ -1,6 +1,26 @@
-<vc-step [hide]="hide" [formGroup]="formGroup">
-	<mat-form-field>
-		<mat-label>Name</mat-label>
-		<input matInput formControlName="name">
-	</mat-form-field>
-</vc-step>
+<form
+  vcStep
+  [hide]="controller.isHide$ | async"
+  [formGroup]="controller.formGroup"
+  [submit$]="controller.submit$"
+  (ngSubmit)="controller.submit()"
+  (next)="controller.submit()"
+  (selected)="onSelected()"
+>
+  <h2 vcAuthHeader>Profile</h2>
+  <p vcAuthCaption>
+    Enter your profile information. This will help other users get to know you.
+  </p>
+
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input
+      matInput
+      #nameInputRef
+      [formControlName]="controls.Name"
+      [maxlength]="userConfig.name.maxLen"
+    />
+  </mat-form-field>
+
+  <vc-auth-error [active]="controller.hasErrors()">Name is required</vc-auth-error>
+</form>

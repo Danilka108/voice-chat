@@ -1,1 +1,6 @@
-export { StepperModule } from './stepper.module'
+export * from './stepper.module'
+export * from './stepper'
+export * from './step'
+export * from './stepper-wrapper'
+export * from './stepper-next'
+export * from './stepper-prev'

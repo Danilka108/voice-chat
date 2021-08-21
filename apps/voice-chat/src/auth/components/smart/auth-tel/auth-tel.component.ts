@@ -1,4 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core'
+import { Steps } from '../../../steps.enum'
 import { Subscription } from 'rxjs'
 import { AuthTelController } from './auth-tel.controller'
 import { AuthTelControls, AUTH_TEL_CONTROLS } from './controls.provider'
@@ -20,6 +21,8 @@ export class AuthTelComponent implements OnInit, OnDestroy {
 
   @ViewChild('telNumberRef') telNumberRef!: ElementRef<HTMLInputElement>
 
+  readonly countries = this.controller.countries
+
   constructor(
     @Inject(AUTH_TEL_CONTROLS) readonly controls: typeof AuthTelControls,
     readonly controller: AuthTelController
@@ -34,7 +37,7 @@ export class AuthTelComponent implements OnInit, OnDestroy {
     this.subscription = this.controller.telCodeChanges$.subscribe()
     this.subscription = this.controller.telNumberChanges$.subscribe()
 
-    this.controller.addFormGroupToParent('tel-step')
+    this.controller.addFormGroupToParent(Steps.Tel)
   }
 
   ngOnDestroy() {

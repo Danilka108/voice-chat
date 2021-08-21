@@ -15,7 +15,7 @@ import {
   AuthTelComponent,
   AuthInitProfileComponent,
 } from './components'
-import { InitProfileService, AuthApiService, CountriesService } from './shared'
+import { UserDataService, AuthApiService, CountriesService, LoadingService } from './shared'
 
 @NgModule({
   declarations: [
@@ -38,6 +38,6 @@ import { InitProfileService, AuthApiService, CountriesService } from './shared'
     FormsModule,
     StepperModule,
   ],
-  providers: [AuthApiService, CountriesService, InitProfileService],
+  providers: [AuthApiService, CountriesService, UserDataService, LoadingService],
 })
 export class AuthModule {}

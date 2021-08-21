@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router'
-import { authPath } from '../routing/app-routing.constants'
+import { authPath } from '../routing'
 import { AuthPageComponent } from './components'
 
 export const routes: Routes = [

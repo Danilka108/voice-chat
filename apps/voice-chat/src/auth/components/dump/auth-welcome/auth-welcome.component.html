@@ -1,0 +1,9 @@
+<form
+  vcStep
+  [fixedHeight]="true"
+  [submit$]="submit$.asObservable()"
+  (next)="submit$.next(true)"
+>
+  <h2 vcAuthHeader textAlign="center">Voice Chat</h2>
+  <p vcAuthText textAlign="center">Welcome to the Voice Chat web app.</p>
+</form>

@@ -1,44 +1,32 @@
-import { StepController } from '../../../step.controller'
-import { Injectable, EventEmitter, Inject } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { FormGroupDirective, FormBuilder, FormGroup, FormControl } from '@angular/forms'
-import { pipe, of, Subject, Observable } from 'rxjs'
+import { of, Subject, Observable } from 'rxjs'
 import { tap, switchMap } from 'rxjs/operators'
-import { AuthApiService } from '../../../shared'
+import { AuthApiService, UserDataService, StepController } from '../../../shared'
 import { AuthCodeControls } from './controls.provider'
-import { UserAuthorizationData, UserInitProfileData } from '@voice-chat/user-interfaces'
-import { AuthTelControls } from '../auth-tel'
-import { AUTH_CODE_LEN, AuthStepsControls } from '../../../providers'
+import { AuthTelControls } from '../auth-tel/controls.provider'
+import { AUTH_CONFIG, AuthConfig } from '../../../../configs'
+import { Steps } from '../../../steps.enum'
+import { BindMethod } from '../../../../common'
 
 @Injectable()
 export class AuthCodeController extends StepController {
-  formGroup = this.fb.group({})
-
-  next = new EventEmitter<UserAuthorizationData | UserInitProfileData>()
-
-  private readonly _submit$ = new Subject<void>()
-  private isDisabledSubmit = false
-  readonly submit$ = this._submit$.asObservable()
+  readonly formGroup = this.fb.group({
+    [AuthCodeControls.Code]: this.fb.control(null),
+  })
 
   readonly codeChanges$ = (<Observable<number | null>>(
     this.formGroup.get(AuthCodeControls.Code)?.valueChanges
-  )).pipe(tap(this.onCodeChange.bind(this)))
+  )).pipe(tap(this.onCodeChange))
 
-  nextPipe = pipe(
-    switchMap(() => {
-      const tel = '+' + this.getTel().replace(/\D/g, '')
-      const code = <number | null>this.formGroup.get(AuthCodeControls.Code)?.value
-
-      return code && code.toString().length >= this.authCodeLen
-        ? this.apiService.codeStep(tel, code)
-        : of(null)
-    }),
-    tap((data) => data && this.next.emit(data)),
-    this.mapApiRes()
-  )
+  private readonly _submit$ = new Subject<void>()
+  readonly submit$ = this._submit$.asObservable().pipe(switchMap(this.switchToApi))
+  private isDisabledSubmit = false
 
   constructor(
-    @Inject(AUTH_CODE_LEN) private readonly authCodeLen: number,
+    @Inject(AUTH_CONFIG) private readonly authConfig: AuthConfig,
+    private readonly userDataService: UserDataService,
     private readonly apiService: AuthApiService,
     private readonly fb: FormBuilder,
     matSnackBar: MatSnackBar,
@@ -47,24 +35,41 @@ export class AuthCodeController extends StepController {
     super(matSnackBar, parentFormGroupDirective)
   }
 
+  @BindMethod()
+  private switchToApi() {
+    const tel = '+' + this.getTel().replace(/\D/g, '')
+    const code = <number | null>this.formGroup.get(AuthCodeControls.Code)?.value
+
+    if (!code || code.toString().length < this.authConfig.code.len) {
+      return of(false)
+    }
+
+    return this.apiService.codeStep(tel, code).pipe(
+      tap(() => (this.isDisabledSubmit = true)),
+      tap(this.userDataService.setUserData),
+      this.mapApiRes()
+    )
+  }
+
+  @BindMethod()
   private onCodeChange(_value: number | null) {
     const control = <FormControl>this.formGroup.get(AuthCodeControls.Code)
 
-    const slicedValue = _value ? _value.toString().slice(0, this.authCodeLen) : ''
+    const slicedValue = _value ? _value.toString().slice(0, this.authConfig.code.len) : ''
     const parsedValue = parseInt(slicedValue)
 
     control.setValue(isNaN(parsedValue) ? null : parsedValue, {
       emitEvent: false,
     })
 
-    this.isDisabledSubmit = slicedValue.length === this.authCodeLen && !this.isDisabledSubmit
-    if (this.isDisabledSubmit) this._submit$.next()
+    if (!this.isDisabledSubmit && slicedValue.length === this.authConfig.code.len)
+      this.submit()
   }
 
   getTel() {
     const parentFormGroup = this.getParentFormGroup()
 
-    const telStepFormGroup = <FormGroup>parentFormGroup.get(AuthStepsControls.TelStep)
+    const telStepFormGroup = <FormGroup>parentFormGroup.get(Steps.Tel)
 
     const telCode = <string>(
       telStepFormGroup.get(AuthTelControls.TelCode)?.value.replace(/\D/g, '')
@@ -74,5 +79,9 @@ export class AuthCodeController extends StepController {
     )
 
     return `+${telCode}${telNumber}`
+  }
+
+  submit() {
+    this._submit$.next()
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core'
-import { StepController } from '../../../step.controller'
 import { FormBuilder, FormControl, FormGroupDirective } from '@angular/forms'
-import { CountriesService, AuthApiService } from '../../../shared'
-import { pipe, of, Observable, asyncScheduler } from 'rxjs'
-import { tap, observeOn, switchMap } from 'rxjs/operators'
+import { CountriesService, AuthApiService, StepController } from '../../../shared'
+import { of, Observable, Subject, asyncScheduler } from 'rxjs'
+import { observeOn, switchMap, tap } from 'rxjs/operators'
 import { AuthTelControls } from './controls.provider'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { BindMethod } from '../../../../common'
+import { Country } from '../../../providers'
 
 @Injectable()
 export class AuthTelController extends StepController {
@@ -19,50 +20,28 @@ export class AuthTelController extends StepController {
     [AuthTelControls.TelNumber]: this.fb.control(''),
   })
 
-  readonly nextPipe = pipe(
-    observeOn(asyncScheduler),
-    tap(() => this.formGroup.get(AuthTelControls.TelNumber)?.setErrors(null)),
-    switchMap(() => {
-      const telCode = <string>(
-        this.formGroup.get(AuthTelControls.TelCode)?.value.replace(/\D/g, '')
-      )
-      const telNumber = <string>(
-        this.formGroup.get(AuthTelControls.TelNumber)?.value.replace(/\D/g, '')
-      )
-
-      const value = '+' + telCode + telNumber
-
-      return telNumber ? this.apiService.telStep(value) : of(null)
-    }),
-    tap(
-      (res) =>
-        !res &&
-        this.formGroup.get(AuthTelControls.TelNumber)?.setErrors({
-          invalidTelNumber: true,
-        })
-    ),
-    this.mapApiRes()
-  )
+  private readonly _submit$ = new Subject<void>()
+  readonly submit$ = this._submit$
+    .asObservable()
+    .pipe(observeOn(asyncScheduler), switchMap(this.switchToApi))
 
   readonly telCodeSelectChanges$ = (<Observable<number>>(
     this.formGroup.get(AuthTelControls.TelCodeSelect)?.valueChanges
-  )).pipe(tap(this.onTelCodeSelectChange.bind(this)))
+  )).pipe(tap(this.onTelCodeSelectChange))
 
   readonly telCodeChanges$ = (<Observable<string>>(
     this.formGroup.get(AuthTelControls.TelCode)?.valueChanges
-  )).pipe(tap(this.onTelCodeChange.bind(this)))
+  )).pipe(tap(this.onTelCodeChange))
 
   readonly telNumberChanges$ = (<Observable<string>>(
-    this.formGroup.get(AuthTelControls.TelCodeSelect)?.valueChanges
-  )).pipe(tap(this.onTelNumberChange.bind(this)))
+    this.formGroup.get(AuthTelControls.TelNumber)?.valueChanges
+  )).pipe(tap(this.onTelNumberChange))
 
   private selectedCountry = this.countriesService.getDefaultCountry()
-
   readonly countries = this.countriesService.countries
 
   constructor(
     private readonly countriesService: CountriesService,
-    private readonly stepController: StepController,
     private readonly fb: FormBuilder,
     private readonly apiService: AuthApiService,
     matSnackBar: MatSnackBar,
@@ -71,8 +50,31 @@ export class AuthTelController extends StepController {
     super(matSnackBar, parentFormGroupDirective)
   }
 
+  @BindMethod()
+  private switchToApi() {
+    const telNumberControl = <FormControl>this.formGroup.get(AuthTelControls.TelNumber)
+    const telCodeControl = <FormControl>this.formGroup.get(AuthTelControls.TelCode)
+
+    telNumberControl.setErrors(null)
+
+    const telCode = <string>telCodeControl.value.replace(/\D/g, '')
+    const telNumber = <string>telNumberControl.value.replace(/\D/g, '')
+
+    const value = '+' + telCode + telNumber
+
+    if (telNumber.length) return this.apiService.telStep(value).pipe(this.mapApiRes())
+
+    telNumberControl.setErrors({
+      invalidTelNumber: true,
+    })
+
+    return of(false)
+  }
+
+  @BindMethod()
   private onTelCodeSelectChange(telCodeSelectValue: number) {
     const nextCountry = this.countriesService.getCountryByIndex(telCodeSelectValue)
+
     const telCodeValue = '+' + (nextCountry?.telCode || '')
 
     this.formGroup.get(AuthTelControls.TelCode)?.setValue(telCodeValue, {
@@ -82,25 +84,27 @@ export class AuthTelController extends StepController {
     this.selectedCountry = nextCountry
   }
 
+  @BindMethod()
   private onTelCodeChange(_telCodeValue: string) {
     const telCodeSelectControl = <FormControl>this.formGroup.get(AuthTelControls.TelCodeSelect)
     const telCodeControl = <FormControl>this.formGroup.get(AuthTelControls.TelCode)
     const telCodeValue = _telCodeValue.replace(/\D/g, '')
-
-    telCodeControl.setValue(`+${telCodeValue}`, {
-      emitEvent: false,
-    })
-
     const indexOfNextCountry = this.countriesService.getIndexOfCountryByKey(
       'telCode',
       telCodeValue
     )
 
-    telCodeSelectControl.setValue(indexOfNextCountry)
+    telCodeControl.setValue(`+${telCodeValue}`, {
+      emitEvent: false,
+    })
+    telCodeSelectControl.setValue(indexOfNextCountry, {
+      emitEvent: false,
+    })
 
     this.selectedCountry = this.countriesService.getCountryByIndex(indexOfNextCountry)
   }
 
+  @BindMethod()
   private onTelNumberChange(_value: string) {
     const control = <FormControl>this.formGroup.get(AuthTelControls.TelNumber)
     const value = _value.replace(/\D/g, '')
@@ -108,7 +112,9 @@ export class AuthTelController extends StepController {
     const pattern = this.selectedCountry?.telPattern
 
     if (!pattern) {
-      control.setValue(value)
+      control.setValue(value, {
+        emitEvent: false,
+      })
       return
     }
 
@@ -132,6 +138,14 @@ export class AuthTelController extends StepController {
     control.setValue(newValue, {
       emitEvent: false,
     })
+  }
+
+  submit() {
+    this._submit$.next()
+  }
+
+  trackBy(index: number, item: Country) {
+    return this.countriesService.trackBy(index, item)
   }
 
   hasErrors() {

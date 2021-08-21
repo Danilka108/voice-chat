@@ -1,0 +1,10 @@
+<div
+  [style.transition]="controller.transition$ | async"
+  [style.height]="controller.height$ | async"
+  class="steps"
+>
+  <ng-content></ng-content>
+</div>
+<div [@hideNextBtnAnimation]="btnAnimState">
+  <ng-content select="[vcStepperNext]"></ng-content>
+</div>

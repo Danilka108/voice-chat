@@ -1,29 +1,27 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MaterialModule } from '../material'
-import { StepComponent, StepperComponent } from './components'
-import {
-  StepperNextDirective,
-  StepperPrevDirective,
-  StepperWrapperDirective,
-} from './directives'
+import { StepComponent } from './step'
+import { StepperComponent } from './stepper'
+import { StepperWrapperDirective } from './stepper-wrapper'
+import { StepperNextDirective } from './stepper-next'
+import { StepperPrevDirective } from './stepper-prev'
 
 @NgModule({
-  imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, MaterialModule],
   declarations: [
     StepperComponent,
     StepComponent,
     StepperWrapperDirective,
-    StepperPrevDirective,
     StepperNextDirective,
+    StepperPrevDirective,
   ],
   exports: [
     StepperComponent,
     StepComponent,
+    StepperWrapperDirective,
     StepperNextDirective,
     StepperPrevDirective,
-    StepperWrapperDirective,
   ],
 })
 export class StepperModule {}
