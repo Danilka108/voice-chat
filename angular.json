@@ -103,9 +103,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/user-interfaces/src/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/user-interfaces/src/**/*.ts"]
           }
         }
       }
@@ -224,6 +222,27 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/voice-chat-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "configs": {
+      "root": "libs/configs",
+      "sourceRoot": "libs/configs/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/configs/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/configs"],
+          "options": {
+            "jestConfig": "libs/configs/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

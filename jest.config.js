@@ -3,5 +3,6 @@ module.exports = {
     '<rootDir>/apps/voice-chat',
     '<rootDir>/apps/api',
     '<rootDir>/libs/user-interfaces',
+    '<rootDir>/libs/configs',
   ],
 }

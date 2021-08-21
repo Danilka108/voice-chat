@@ -5,7 +5,9 @@ import {
   UserInitProfileData,
 } from './user.interfaces'
 
-export const isUserIdentificationData = (data: unknown): data is UserIdentificationData => {
+export const isUserIdentificationData = (
+  data: unknown
+): data is UserIdentificationData => {
   const d = data as UserIdentificationData
   return d.browser !== undefined && d.os !== undefined
 }

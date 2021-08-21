@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "ES6",
+    "target": "es2017",
     "module": "esnext",
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@voice-chat/api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "@voice-chat/user-interfaces": ["libs/user-interfaces/src/index.ts"]
+      "@voice-chat/user-interfaces": ["libs/user-interfaces/src/index.ts"],
+      "@voice-chat/configs": ["libs/configs/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
