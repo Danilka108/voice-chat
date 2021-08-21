@@ -1,9 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
-import { CacheSession } from '../interfaces/session.interface'
+import { CacheSession } from '../interfaces'
 import { CacheSessionService } from './cache-session.service'
-import { isCacheSession } from '../guards/is-cache-session'
-import { TokenService } from '../../token/token.service'
-import { UserAuthorizationData, UserIdentificationData } from '@voice-chat/user-interfaces'
+import { isCacheSession } from '../guards'
+import { TokenService } from '../../token'
+import {
+  UserAuthorizationData,
+  UserIdentificationData,
+} from '@voice-chat/user-interfaces'
 
 @Injectable()
 export class SessionService {
@@ -16,7 +19,10 @@ export class SessionService {
     accessToken: string,
     userIdentificationData: UserIdentificationData
   ): Promise<UserAuthorizationData>
-  async create(tel: string, cacheSessionKey: CacheSession): Promise<UserAuthorizationData>
+  async create(
+    tel: string,
+    cacheSessionKey: CacheSession
+  ): Promise<UserAuthorizationData>
   async create(
     arg1: string,
     arg2: UserIdentificationData | CacheSession
@@ -49,7 +55,10 @@ export class SessionService {
     const accessToken = this.tokenService.createAccessToken(decoded)
     const refreshToken = this.tokenService.createRefreshToken()
 
-    await this.cacheService.set({ id: decoded.userID, userIdentificationData }, refreshToken)
+    await this.cacheService.set(
+      { id: decoded.userID, userIdentificationData },
+      refreshToken
+    )
 
     return {
       accessToken,
@@ -61,7 +70,9 @@ export class SessionService {
     userAuthorizationData: UserAuthorizationData,
     userIdentificationData: UserIdentificationData
   ) {
-    const decoded = this.tokenService.decodeAccessToken(userAuthorizationData.accessToken)
+    const decoded = this.tokenService.decodeAccessToken(
+      userAuthorizationData.accessToken
+    )
 
     if (!decoded) {
       throw new ForbiddenException('Failed verify session.')
@@ -84,7 +95,9 @@ export class SessionService {
     userAuthorizationData: UserAuthorizationData,
     userIdentificationData: UserIdentificationData
   ) {
-    const decoded = this.tokenService.decodeAccessToken(userAuthorizationData.accessToken)
+    const decoded = this.tokenService.decodeAccessToken(
+      userAuthorizationData.accessToken
+    )
 
     if (!decoded) {
       throw new ForbiddenException('Failed verify session.')

@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { UserIdentificationData } from '@voice-chat/user-interfaces'
-import { TokenService } from '../../token/token.service'
-import { CacheInitProfile } from '../interfaces/init-profile.interface'
+import { TokenService } from '../../token'
+import { CacheInitProfile } from '../interfaces'
 import { CacheInitProfileService } from './cache-init-profile.service'
 
 @Injectable()
@@ -19,7 +19,10 @@ export class InitProfileService {
     return token
   }
 
-  async verify(cacheInitProfileKey: CacheInitProfile, initProfileToken: string) {
+  async verify(
+    cacheInitProfileKey: CacheInitProfile,
+    initProfileToken: string
+  ) {
     const cacheValue = await this.cacheService.get(cacheInitProfileKey)
 
     if (!cacheValue || cacheValue.initProfileToken !== initProfileToken) {

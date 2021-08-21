@@ -1,14 +1,16 @@
 import { Inject } from '@nestjs/common'
 import { Twilio } from 'twilio'
-import { CodeConfig, CODE_CONFIG } from '../config/code.config'
-import { NotificationsConfig, NOTIFICATIONS_CONFIG } from '../config/notifications.config'
-import { INotificationsService } from './notifications.interface'
+import { CodeConfig, CODE_CONFIG } from '../../configs'
+import { NotificationsConfig, NOTIFICATIONS_CONFIG } from '../../configs'
+import { INotificationsService } from '../interfaces'
+import { TWILIO } from '../providers'
 
 export class NotificationsService implements INotificationsService {
   constructor(
-    @Inject(NOTIFICATIONS_CONFIG) private readonly notificationsConfig: NotificationsConfig,
+    @Inject(NOTIFICATIONS_CONFIG)
+    private readonly notificationsConfig: NotificationsConfig,
     @Inject(CODE_CONFIG) private readonly codeConfig: CodeConfig,
-    @Inject('twilio') private readonly twilio: Twilio
+    @Inject(TWILIO) private readonly twilio: Twilio
   ) {}
 
   async sendAuthNotification(to: string, code: number): Promise<boolean> {
@@ -17,7 +19,9 @@ export class NotificationsService implements INotificationsService {
 
     try {
       const message = await this.twilio.messages.create({
-        body: `Your security code: ${code}. Code lifetime is ${codeTTL / (60 * 1000)} minutes`,
+        body: `Your security code: ${code}. Code lifetime is ${
+          codeTTL / (60 * 1000)
+        } minutes`,
         from,
         to,
       })

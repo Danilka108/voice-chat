@@ -1,5 +1,5 @@
 import { isUserIdentificationData } from '@voice-chat/user-interfaces'
-import { CacheCode } from '../interfaces/code.interface'
+import { CacheCode } from '../interfaces'
 
 export const isCacheCode = (data: unknown): data is CacheCode => {
   const d = data as CacheCode

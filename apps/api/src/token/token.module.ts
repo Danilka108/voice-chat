@@ -1,22 +1,11 @@
 import { Module } from '@nestjs/common'
-import { TokenService } from './token.service'
-import { tokenManagerFactory, TOKEN_MANAGER } from './token-manager.factory'
-import { cryptoManagerFactory, CRYPTO_MANAGER } from './crypto-manager.factory'
-import { ConfigModule } from '../config/config.module'
+import { TokenService } from './shared'
+import { ConfigsModule } from '../configs'
+import { tokenManagerProvider, cryptoManagerProvider } from './providers'
 
 @Module({
-  imports: [ConfigModule],
-  providers: [
-    TokenService,
-    {
-      provide: TOKEN_MANAGER,
-      useFactory: tokenManagerFactory,
-    },
-    {
-      provide: CRYPTO_MANAGER,
-      useFactory: cryptoManagerFactory,
-    },
-  ],
+  imports: [ConfigsModule],
+  providers: [TokenService, tokenManagerProvider, cryptoManagerProvider],
   exports: [TokenService],
 })
 export class TokenModule {}

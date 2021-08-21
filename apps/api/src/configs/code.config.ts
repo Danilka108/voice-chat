@@ -1,4 +1,5 @@
 import { Provider } from '@nestjs/common'
+import { authConfig } from '@voice-chat/configs'
 
 export interface CodeConfig {
   len: number
@@ -13,7 +14,7 @@ export const CODE_CONFIG = Symbol('Code Config')
 export const codeConfigProvider: Provider<CodeConfig> = {
   provide: CODE_CONFIG,
   useValue: {
-    len: 6,
+    len: authConfig.code.len,
     ttl: 10 * 60 * 1000,
     periodOfBanOfRefresh: 2 * 60,
   },

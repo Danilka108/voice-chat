@@ -6,11 +6,13 @@ import {
   AuthTelStepRes,
 } from '@voice-chat/api-interfaces'
 import { isUserAuthorizationData } from '@voice-chat/user-interfaces'
-import { AuthService } from './auth.service'
-import { AuthCodeStepDto } from './dto/auth-code-step.dto'
-import { AuthInitProfileStepDto } from './dto/auth-init-profile-step.dto'
-import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
-import { AuthTelStepDto } from './dto/auth-tel-step.dto'
+import { AuthService } from './shared/auth.service'
+import {
+  AuthTelStepDto,
+  AuthCodeStepDto,
+  AuthInitProfileStepDto,
+  AuthRefreshSessionDto,
+} from './dto'
 
 @Controller('auth')
 export class AuthController {
@@ -18,19 +20,24 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('tel-step')
-  async telStep(@Body() authTelStepDto: AuthTelStepDto): Promise<AuthTelStepRes> {
+  async telStep(
+    @Body() authTelStepDto: AuthTelStepDto
+  ): Promise<AuthTelStepRes> {
     await this.authService.telStep(authTelStepDto)
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'A code will be sent to the entered phone number. Use this code for sign in.',
+      message:
+        'A code will be sent to the entered phone number. Use this code for sign in.',
       data: undefined,
     }
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('code-step')
-  async codeStep(@Body() authCodeStepDto: AuthCodeStepDto): Promise<AuthCodeStepRes> {
+  async codeStep(
+    @Body() authCodeStepDto: AuthCodeStepDto
+  ): Promise<AuthCodeStepRes> {
     const result = await this.authService.codeStep(authCodeStepDto)
 
     const message = isUserAuthorizationData(result)
@@ -49,7 +56,9 @@ export class AuthController {
   async initProfileStep(
     @Body() authInitProfileStepDto: AuthInitProfileStepDto
   ): Promise<AuthInitProfileStepRes> {
-    const result = await this.authService.initProfileStep(authInitProfileStepDto)
+    const result = await this.authService.initProfileStep(
+      authInitProfileStepDto
+    )
 
     return {
       statusCode: HttpStatus.OK,

@@ -7,27 +7,22 @@ import { initProfileConfigProvider } from './init-profile.config'
 import { notificationsConfigProvider } from './notifications.config'
 import { sessionConfigProvider } from './session.config'
 import { tokenConfigProvider } from './token.config'
+import { userConfigProvider } from './user.config'
+
+const configs = [
+  userConfigProvider,
+  appConfigProvider,
+  cacheConfigProvider,
+  codeConfigProvider,
+  databaseConfigProvider,
+  notificationsConfigProvider,
+  sessionConfigProvider,
+  tokenConfigProvider,
+  initProfileConfigProvider,
+]
 
 @Module({
-  providers: [
-    appConfigProvider,
-    cacheConfigProvider,
-    codeConfigProvider,
-    databaseConfigProvider,
-    notificationsConfigProvider,
-    sessionConfigProvider,
-    tokenConfigProvider,
-    initProfileConfigProvider,
-  ],
-  exports: [
-    appConfigProvider,
-    cacheConfigProvider,
-    codeConfigProvider,
-    databaseConfigProvider,
-    notificationsConfigProvider,
-    sessionConfigProvider,
-    tokenConfigProvider,
-    initProfileConfigProvider,
-  ],
+  providers: configs,
+  exports: configs,
 })
-export class ConfigModule {}
+export class ConfigsModule {}

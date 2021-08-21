@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Inject, BadRequestException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { User } from './user.entity'
+import { User } from '../user.entity'
+import { UserConfig, USER_CONFIG } from '../../configs'
 
 @Injectable()
 export class UserDBService {
-  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>) {}
+  constructor(
+    @Inject(USER_CONFIG) private readonly userConfig: UserConfig,
+    @InjectRepository(User) private readonly userRepo: Repository<User>
+  ) {}
 
   async findByID(id: number): Promise<User | null> {
     const user = await this.userRepo.findOne({
@@ -28,6 +32,12 @@ export class UserDBService {
   }
 
   async create(name: string, tel: string): Promise<User> {
+    if (name.length > this.userConfig.name.maxLen) {
+      throw new BadRequestException(
+        `User name can't be longer ${this.userConfig.name.maxLen} chars.`
+      )
+    }
+
     const newUser = new User()
     newUser.name = name
     newUser.tel = tel

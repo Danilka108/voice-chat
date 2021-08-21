@@ -1,8 +1,13 @@
-import { ForbiddenException, Inject, Injectable, NotAcceptableException } from '@nestjs/common'
-import { CacheCode } from '../interfaces/code.interface'
-import { CacheCodeService } from '../shared/cache-code.service'
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common'
+import { CacheCode } from '../interfaces'
+import { CacheCodeService } from './cache-code.service'
 import * as crypto from 'crypto'
-import { CodeConfig, CODE_CONFIG } from '../../config/code.config'
+import { CodeConfig, CODE_CONFIG } from '../../configs'
 
 @Injectable()
 export class CodeService {
@@ -42,7 +47,8 @@ export class CodeService {
     ) {
       throw new NotAcceptableException(
         `Wait ${
-          periodOfBanOfRefreshCode - Math.round((Date.now() - cacheCodeValue.createdAt) / 1000)
+          periodOfBanOfRefreshCode -
+          Math.round((Date.now() - cacheCodeValue.createdAt) / 1000)
         } seconds for send a new auth code.`
       )
     }

@@ -1,4 +1,4 @@
-import { CacheCodeValue } from '../interfaces/code.interface'
+import { CacheCodeValue } from '../interfaces'
 
 export const isCacheCodeValue = (data: unknown): data is CacheCodeValue => {
   return (

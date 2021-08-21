@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { CacheSession, CacheSessionValue } from '../interfaces/session.interface'
-import { CacheManager } from '../../cache/cache-manager'
-import { SessionConfig, SESSION_CONFIG } from '../../config/session.config'
-import { isCacheSessionValue } from '../guards/is-cache-session-value'
+import { CacheSession, CacheSessionValue } from '../interfaces'
+import { CacheManager } from '../../cache'
+import { SessionConfig, SESSION_CONFIG } from '../../configs'
+import { isCacheSessionValue } from '../guards'
 
 @Injectable()
 export class CacheSessionService {

@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { AuthRefreshSessionDto } from './dto/auth-refresh-session.dto'
-import { SessionService } from '../session/shared/session.service'
-import { NotificationsService } from '../notifications/notifications.service'
-import { UserDBService } from '../user/user-db.service'
-import { CodeService } from '../code/shared/code.service'
-import { AuthTelStepDto } from './dto/auth-tel-step.dto'
-import { AuthCodeStepDto } from './dto/auth-code-step.dto'
-import { InitProfileService } from '../init-profile/shared/init-profile.service'
-import { AuthInitProfileStepDto } from './dto/auth-init-profile-step.dto'
+import {
+  AuthTelStepDto,
+  AuthCodeStepDto,
+  AuthInitProfileStepDto,
+  AuthRefreshSessionDto,
+} from '../dto'
+import { SessionService } from '../../session'
+import { NotificationsService } from '../../notifications'
+import { UserDBService } from '../../user'
+import { CodeService } from '../../code'
+import { InitProfileService } from '../../init-profile'
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,10 @@ export class AuthService {
       userIdentificationData,
     })
 
-    const isNotificationSent = await this.notificationsService.sendAuthNotification(tel, code)
+    const isNotificationSent = await this.notificationsService.sendAuthNotification(
+      tel,
+      code
+    )
 
     if (!isNotificationSent) {
       await this.codeService.delete({
@@ -96,9 +101,15 @@ export class AuthService {
     userAuthorizationData,
     userIdentificationData,
   }: AuthRefreshSessionDto) {
-    await this.sessionService.verify(userAuthorizationData, userIdentificationData)
+    await this.sessionService.verify(
+      userAuthorizationData,
+      userIdentificationData
+    )
 
-    await this.sessionService.delete(userAuthorizationData, userIdentificationData)
+    await this.sessionService.delete(
+      userAuthorizationData,
+      userIdentificationData
+    )
 
     const newSession = await this.sessionService.create(
       userAuthorizationData.accessToken,

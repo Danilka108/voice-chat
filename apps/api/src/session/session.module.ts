@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common'
-import { SessionService } from './shared/session.service'
-import { CacheModule } from '../cache/cache.module'
-import { CacheSessionService } from './shared/cache-session.service'
-import { TokenModule } from '../token/token.module'
-import { ConfigModule } from '../config/config.module'
+import { CacheModule } from '../cache'
+import { CacheSessionService, SessionService } from './shared'
+import { TokenModule } from '../token'
+import { ConfigsModule } from '../configs'
 
 @Module({
-  imports: [CacheModule, TokenModule, ConfigModule],
+  imports: [CacheModule, TokenModule, ConfigsModule],
   providers: [SessionService, CacheSessionService],
   exports: [SessionService],
 })

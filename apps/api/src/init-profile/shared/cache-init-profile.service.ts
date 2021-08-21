@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { CacheManager } from '../../cache/cache-manager'
-import { InitProfileConfig, INIT_PROFILE_CONFIG } from '../../config/init-profile.config'
-import { CacheInitProfile, CacheInitProfileValue } from '../interfaces/init-profile.interface'
-import { isCacheInitProfileValue } from '../guards/is-cache-init-profile-value'
+import { CacheManager } from '../../cache'
+import { InitProfileConfig, INIT_PROFILE_CONFIG } from '../../configs'
+import { CacheInitProfile, CacheInitProfileValue } from '../interfaces'
+import { isCacheInitProfileValue } from '../guards'
 
 @Injectable()
 export class CacheInitProfileService {

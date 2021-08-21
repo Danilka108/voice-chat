@@ -1,14 +1,20 @@
 import { Module } from '@nestjs/common'
-import { CodeModule } from '../code/code.module'
-import { InitProfileModule } from '../init-profile/init-profile.module'
-import { NotificationsModule } from '../notifications/notifications.module'
-import { SessionModule } from '../session/session.module'
-import { UserModule } from '../user/user.module'
+import { CodeModule } from '../code'
+import { InitProfileModule } from '../init-profile'
+import { NotificationsModule } from '../notifications'
+import { SessionModule } from '../session'
+import { UserModule } from '../user'
 import { AuthController } from './auth.controller'
-import { AuthService } from './auth.service'
+import { AuthService } from './shared'
 
 @Module({
-  imports: [SessionModule, NotificationsModule, UserModule, CodeModule, InitProfileModule],
+  imports: [
+    SessionModule,
+    NotificationsModule,
+    UserModule,
+    CodeModule,
+    InitProfileModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService],
 })

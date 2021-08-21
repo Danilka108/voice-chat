@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common'
-import { CacheModule } from '../cache/cache.module'
-import { CodeService } from './shared/code.service'
-import { CacheCodeService } from './shared/cache-code.service'
-import { ConfigModule } from '../config/config.module'
+import { CacheModule } from '../cache'
+import { CodeService } from './shared'
+import { CacheCodeService } from './shared'
+import { ConfigsModule } from '../configs'
 
 @Module({
-  imports: [CacheModule, ConfigModule],
+  imports: [CacheModule, ConfigsModule],
   providers: [CodeService, CacheCodeService],
   exports: [CodeService],
 })

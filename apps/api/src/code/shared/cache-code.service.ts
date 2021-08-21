@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { CacheManager } from '../../cache/cache-manager'
-import { CodeConfig, CODE_CONFIG } from '../../config/code.config'
-import { CacheCode, CacheCodeValue } from '../interfaces/code.interface'
-import { isCacheCodeValue } from '../guards/is-cache-code-value'
+import { CacheManager } from '../../cache'
+import { CodeConfig, CODE_CONFIG } from '../../configs'
+import { CacheCode, CacheCodeValue } from '../interfaces'
+import { isCacheCodeValue } from '../guards'
 
 @Injectable()
 export class CacheCodeService {

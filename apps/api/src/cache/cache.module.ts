@@ -1,11 +1,11 @@
 import { Logger, Module } from '@nestjs/common'
-import { CacheManager } from './cache-manager'
+import { CacheManager } from './cache.manager'
 import IORedis = require('ioredis')
-import { ConfigModule } from '../config/config.module'
-import { CacheConfig, CACHE_CONFIG } from '../config/cache.config'
+import { ConfigsModule } from '../configs'
+import { CacheConfig, CACHE_CONFIG } from '../configs'
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigsModule],
   providers: [
     CacheManager,
     {

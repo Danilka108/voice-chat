@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common'
-import { INotificationsService } from './notifications.interface'
+import { INotificationsService } from '../interfaces'
 
 export class NotificationsDevService implements INotificationsService {
   async sendAuthNotification(to: string, code: number): Promise<boolean> {

@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { AuthDecoded } from '../common/interfaces/auth-decoded.interface'
-import { isAuthDecoded } from '../common/validators/is-auth-decoded.validator'
-import { TokenManager, TOKEN_MANAGER } from './token-manager.factory'
-import { CryptoManager, CRYPTO_MANAGER } from './crypto-manager.factory'
-import { TokenConfig, TOKEN_CONFIG } from '../config/token.config'
+import { AuthDecoded } from '../../common'
+import { isAuthDecoded } from '../../common'
+import { TokenManager, TOKEN_MANAGER } from '../providers'
+import { CryptoManager, CRYPTO_MANAGER } from '../providers'
+import { TokenConfig, TOKEN_CONFIG } from '../../configs'
 
 @Injectable()
 export class TokenService {

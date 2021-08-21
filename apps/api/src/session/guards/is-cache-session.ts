@@ -1,5 +1,5 @@
 import { isUserIdentificationData } from '@voice-chat/user-interfaces'
-import { CacheSession } from '../interfaces/session.interface'
+import { CacheSession } from '../interfaces'
 
 export const isCacheSession = (data: unknown): data is CacheSession => {
   const d = data as CacheSession
